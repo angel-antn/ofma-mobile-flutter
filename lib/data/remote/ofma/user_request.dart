@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:ofma_app/data/local/preferences.dart';
 import 'package:ofma_app/models/user_response.dart';
 
 class UserRequest {
@@ -36,6 +37,27 @@ class UserRequest {
 
     if (response.statusCode == 201) {
       return UserResponse.fromJson(response.body);
+    } else {
+      return null;
+    }
+  }
+
+  Future<User?> edit({
+    required String name,
+    required String lastname,
+  }) async {
+    final url = Uri.http(_baseUrl, '$_path/${Preferences.user?.id}');
+
+    final response = await http.patch(url, body: {
+      'name': name,
+      'lastname': lastname,
+    }, headers: {
+      'Authorization': 'Bearer ${Preferences.token}'
+    });
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return User.fromJson(response.body);
     } else {
       return null;
     }

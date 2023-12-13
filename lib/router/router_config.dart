@@ -1,10 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:ofma_app/components/transitions/custom_fade_transition.dart';
+import 'package:ofma_app/components/transitions/swipe_to_right_transition.dart';
 import 'package:ofma_app/router/router_const.dart';
 
 //transitions
 import 'package:ofma_app/components/transitions/swipe_to_left_transition.dart';
+import 'package:ofma_app/screens/edit_profile/edit_profile_screen.dart';
 
 //screens
 import 'package:ofma_app/screens/login/login_screen.dart';
@@ -44,6 +46,13 @@ class AppRouter {
         name: AppRouterConstants.registerScreen,
         pageBuilder: (context, state) {
           return CustomFadeTransition(child: const RegisterScreen());
+        },
+      ),
+      GoRoute(
+        path: '/edit',
+        name: AppRouterConstants.editProfileScreen,
+        pageBuilder: (context, state) {
+          return SwipeToRightTransition(child: const EditProfileScreen());
         },
       ),
     ],

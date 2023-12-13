@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class UserResponse {
   User user;
-  String token;
+  String? token;
 
   UserResponse({
     required this.user,
