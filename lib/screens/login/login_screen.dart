@@ -6,10 +6,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/buttons/primary_button.dart';
 import 'package:ofma_app/components/buttons/secondary_button.dart';
+import 'package:ofma_app/components/buttons/touchable_opacity.dart';
 import 'package:ofma_app/components/fields/login_text_form_field.dart';
 import 'package:ofma_app/components/titles/login_title.dart';
 import 'package:ofma_app/components/fields/password_text_form_field.dart';
 import 'package:ofma_app/providers/login_form_provider.dart';
+import 'package:ofma_app/providers/user_data_provider.dart';
 import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/data/local/preferences.dart';
 import 'package:ofma_app/data/remote/ofma/user_request.dart';
@@ -80,6 +82,9 @@ class _LoginFormState extends State<_LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final loginFormProvider = Provider.of<LoginFormProvider>(context);
+    final userDataProvider = Provider.of<UserDataProvider>(context);
+
     validateEmail(String value) {
       if (checkEmail(value: value)) {
         return null;
@@ -119,6 +124,7 @@ class _LoginFormState extends State<_LoginForm> {
 
       Preferences.token = response.token;
       Preferences.user = response.user;
+      userDataProvider.user = response.user;
 
       clearProvider();
 
@@ -127,7 +133,6 @@ class _LoginFormState extends State<_LoginForm> {
       });
     }
 
-    final loginFormProvider = Provider.of<LoginFormProvider>(context);
     return Form(
       key: loginFormProvider.loginFormKey,
       child: Column(
@@ -169,6 +174,18 @@ class _LoginFormState extends State<_LoginForm> {
               AppRouterConstants.registerScreen,
             ),
           ),
+          const SizedBox(
+            height: 20,
+          ),
+          TouchableOpacity(
+            onTap: () => context.pushReplacementNamed(
+              AppRouterConstants.recoverPasswordScreen,
+            ),
+            child: const Text(
+              '¿Olvidó su contraseña?',
+              style: TextStyle(color: Colors.white70),
+            ),
+          )
         ],
       ),
     );

@@ -9,6 +9,7 @@ import 'package:ofma_app/components/fields/login_text_form_field.dart';
 import 'package:ofma_app/components/titles/login_title.dart';
 import 'package:ofma_app/components/fields/password_text_form_field.dart';
 import 'package:ofma_app/providers/register_form_provider.dart';
+import 'package:ofma_app/providers/user_data_provider.dart';
 import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/data/local/preferences.dart';
 import 'package:ofma_app/data/remote/ofma/user_request.dart';
@@ -17,7 +18,7 @@ import 'package:ofma_app/utils/check_email.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -128,6 +129,9 @@ class _RegisterFormState extends State<_RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    final registerFormProvider = Provider.of<RegisterFormProvider>(context);
+    final userDataProvider = Provider.of<UserDataProvider>(context);
+
     validateName(String value) {
       if (value != '') {
         return null;
@@ -198,6 +202,7 @@ class _RegisterFormState extends State<_RegisterForm> {
 
       Preferences.token = response.token;
       Preferences.user = response.user;
+      userDataProvider.user = response.user;
 
       clearProvider();
 
@@ -206,7 +211,6 @@ class _RegisterFormState extends State<_RegisterForm> {
       });
     }
 
-    final registerFormProvider = Provider.of<RegisterFormProvider>(context);
     return Form(
       key: registerFormProvider.registerFormKey,
       child: Column(

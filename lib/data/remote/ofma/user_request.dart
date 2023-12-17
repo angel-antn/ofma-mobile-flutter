@@ -20,6 +20,39 @@ class UserRequest {
     }
   }
 
+  Future<String?> resetPasswordRequest({required String email}) async {
+    final url = Uri.http(_baseUrl, '$_path/reset-password-request');
+
+    final response = await http.post(url, body: {'email': email});
+
+    if (response.statusCode == 201) {
+      return null;
+    } else if (response.statusCode == 400) {
+      return 'El usuario no se encuentra registrado';
+    } else {
+      return 'Ha ocurrido un error inesperado';
+    }
+  }
+
+  Future<String?> validateResetPasswordRequest({
+    required String email,
+    required String password,
+    required String otp,
+  }) async {
+    final url = Uri.http(_baseUrl, '$_path/validate-reset-password-request');
+
+    final response = await http.post(url,
+        body: {'email': email, 'password': password, 'resetPasswordOtp': otp});
+
+    if (response.statusCode == 201) {
+      return null;
+    } else if (response.statusCode == 400) {
+      return 'código de recuperación no válido';
+    } else {
+      return 'Ha ocurrido un error inesperado';
+    }
+  }
+
   Future<UserResponse?> register({
     required String name,
     required String lastname,
@@ -56,7 +89,6 @@ class UserRequest {
     });
 
     if (response.statusCode == 200) {
-      print(response.body);
       return User.fromJson(response.body);
     } else {
       return null;

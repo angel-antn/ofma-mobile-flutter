@@ -11,6 +11,7 @@ import 'package:ofma_app/screens/edit_profile/edit_profile_screen.dart';
 //screens
 import 'package:ofma_app/screens/login/login_screen.dart';
 import 'package:ofma_app/screens/main/main_screen.dart';
+import 'package:ofma_app/screens/recover_password/recover_password_screen.dart';
 import 'package:ofma_app/screens/register/register_screen.dart';
 import 'package:ofma_app/data/local/preferences.dart';
 
@@ -49,6 +50,13 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/recover',
+        name: AppRouterConstants.recoverPasswordScreen,
+        pageBuilder: (context, state) {
+          return CustomFadeTransition(child: const RecoverPasswordScreen());
+        },
+      ),
+      GoRoute(
         path: '/edit',
         name: AppRouterConstants.editProfileScreen,
         pageBuilder: (context, state) {
@@ -63,7 +71,9 @@ class AppRouter {
       // redirige al usuario a la pantalla principal.
       if (token != null &&
           !JwtDecoder.isExpired(token) &&
-          (state.fullPath == '/login' || state.fullPath == '/register')) {
+          (state.fullPath == '/login' ||
+              state.fullPath == '/register' ||
+              state.fullPath == '/recover')) {
         return '/main';
       }
 
@@ -71,7 +81,8 @@ class AppRouter {
       // redirige al usuario a la pantalla de inicio de sesión.
       if ((token == null || JwtDecoder.isExpired(token)) &&
           state.fullPath != '/login' &&
-          state.fullPath != '/register') {
+          state.fullPath != '/register' &&
+          state.fullPath != '/recover') {
         return '/login';
       }
 
