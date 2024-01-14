@@ -26,11 +26,12 @@ class UserResponse {
 }
 
 class User {
-  String id;
-  String email;
-  String name;
-  String lastname;
-  bool isCollaborator;
+  String? id;
+  String? email;
+  String? name;
+  String? lastname;
+  bool? isCollaborator;
+  bool? isPremium;
 
   User({
     required this.id,
@@ -38,6 +39,7 @@ class User {
     required this.name,
     required this.lastname,
     required this.isCollaborator,
+    required this.isPremium,
   });
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
@@ -50,6 +52,7 @@ class User {
         name: json["name"],
         lastname: json["lastname"],
         isCollaborator: json["isCollaborator"],
+        isPremium: json["isPremium"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -58,5 +61,6 @@ class User {
         "name": name,
         "lastname": lastname,
         "isCollaborator": isCollaborator,
+        "isPremium": isPremium
       };
 }

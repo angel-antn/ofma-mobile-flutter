@@ -47,7 +47,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 25),
                 ],
               )),
-        )
+        ),
       ],
     ));
   }
@@ -63,10 +63,11 @@ class _LoginCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(25)));
 
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        padding: const EdgeInsets.all(30),
-        decoration: cardDecoration,
-        child: const _LoginForm());
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(30),
+      decoration: cardDecoration,
+      child: const _LoginForm(),
+    );
   }
 }
 
@@ -83,7 +84,8 @@ class _LoginFormState extends State<_LoginForm> {
   @override
   Widget build(BuildContext context) {
     final loginFormProvider = Provider.of<LoginFormProvider>(context);
-    final userDataProvider = Provider.of<UserDataProvider>(context);
+    final userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: false);
 
     validateEmail(String value) {
       if (checkEmail(value: value)) {

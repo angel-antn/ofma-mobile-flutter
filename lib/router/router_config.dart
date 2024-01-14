@@ -6,6 +6,7 @@ import 'package:ofma_app/router/router_const.dart';
 
 //transitions
 import 'package:ofma_app/components/transitions/swipe_to_left_transition.dart';
+import 'package:ofma_app/screens/concert/concert_screen.dart';
 import 'package:ofma_app/screens/edit_profile/edit_profile_screen.dart';
 
 //screens
@@ -61,6 +62,16 @@ class AppRouter {
         name: AppRouterConstants.editProfileScreen,
         pageBuilder: (context, state) {
           return SwipeToRightTransition(child: const EditProfileScreen());
+        },
+      ),
+      GoRoute(
+        path: '/concert/:id',
+        name: AppRouterConstants.concertScreen,
+        pageBuilder: (context, state) {
+          return CustomFadeTransition(
+              child: ConcertScreen(
+            id: state.pathParameters['id']!,
+          ));
         },
       ),
     ],

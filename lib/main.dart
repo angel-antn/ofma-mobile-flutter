@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:ofma_app/providers/edit_profile_form_provider.dart';
 import 'package:ofma_app/providers/login_form_provider.dart';
 import 'package:ofma_app/providers/recover_password_form_provider.dart';
@@ -12,6 +13,9 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey =
+      'pk_test_51OOTZ8D5hIkovXn9XJMGyT1Br0i2NAuZfWtoGJAjPbOubLYgHU6KiVEUVZU59pS5ACz7ryrcOrUHmsunpXqRpn3M00SUuCko5O';
+  await Stripe.instance.applySettings();
   await Preferences.init();
   runApp(const AppProviderTree());
 }
@@ -24,6 +28,9 @@ class AppProviderTree extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (context) => UserDataProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => LoginFormProvider(),
         ),
         ChangeNotifierProvider(
@@ -34,9 +41,6 @@ class AppProviderTree extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => RecoverPasswordFormProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => UserDataProvider(),
         ),
       ],
       child: const OfmaApp(),

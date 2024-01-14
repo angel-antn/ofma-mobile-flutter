@@ -2,7 +2,16 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ofma_app/components/buttons/touchable_opacity.dart';
+import 'package:ofma_app/components/loaders/circular_loader.dart';
+import 'package:ofma_app/components/musician_card/musician_card.dart';
+import 'package:ofma_app/data/remote/ofma/concert_request.dart';
+import 'package:ofma_app/data/remote/ofma/content_request.dart';
+import 'package:ofma_app/data/remote/ofma/musician_request.dart';
+import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
+import 'package:ofma_app/utils/to_title_case.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -52,6 +61,7 @@ class _ConcertsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final concertRequest = ConcertRequest();
     final controller = SwiperController();
     return Stack(
       children: [
@@ -65,31 +75,49 @@ class _ConcertsSection extends StatelessWidget {
           child: SizedBox(
             width: double.infinity,
             height: 250,
-            child: Swiper(
-              controller: controller,
-              itemBuilder: (BuildContext context, int index) {
-                return ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                  child: Image.network(
-                    "https://via.placeholder.com/380x180",
-                    fit: BoxFit.cover,
-                  ),
-                );
+            child: FutureBuilder(
+              future: concertRequest.getConcerts(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Swiper(
+                    controller: controller,
+                    itemBuilder: (BuildContext context, int index) {
+                      return TouchableOpacity(
+                        onTap: () => context.pushNamed(
+                            AppRouterConstants.concertScreen,
+                            pathParameters: {
+                              'id': snapshot.data?.result?[index].id ?? ''
+                            }),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(15)),
+                          child: Image.network(
+                            (snapshot.data?.result?[index].imageUrl ?? '')
+                                .replaceAll('localhost', '10.0.2.2'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: snapshot.data?.result?.length ?? 0,
+                    viewportFraction: 0.8,
+                    scale: 0.9,
+                    itemWidth: 380,
+                    itemHeight: 180,
+                    loop: false,
+                    layout: SwiperLayout.TINDER,
+                    pagination: SwiperPagination(
+                      builder: DotSwiperPaginationBuilder(
+                          color: Colors.white24,
+                          activeColor: AppColors.secondaryColor,
+                          size: 6.0,
+                          activeSize: 9.0),
+                    ),
+                  );
+                } else {
+                  return const CircularLoader(color: Colors.white, size: 50);
+                }
               },
-              itemCount: 2,
-              viewportFraction: 0.8,
-              scale: 0.9,
-              itemWidth: 380,
-              itemHeight: 180,
-              loop: false,
-              layout: SwiperLayout.TINDER,
-              pagination: SwiperPagination(
-                builder: DotSwiperPaginationBuilder(
-                    color: Colors.white24,
-                    activeColor: AppColors.secondaryColor,
-                    size: 6.0,
-                    activeSize: 9.0),
-              ),
             ),
           ),
         ),
@@ -200,9 +228,12 @@ class _HighlightedConcertVideos extends StatelessWidget {
               )),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
-        _VideoSwiper()
+        _VideoSwiper(
+          category: 'concierto',
+          color: Colors.pinkAccent,
+        )
       ],
     );
   }
@@ -228,35 +259,120 @@ class _HighlightedEnterviewsVideos extends StatelessWidget {
               )),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
-        _VideoSwiper()
+        _VideoSwiper(
+          category: 'entrevista',
+          color: Colors.orange,
+        )
       ],
     );
   }
 }
 
 class _VideoSwiper extends StatelessWidget {
-  const _VideoSwiper();
+  const _VideoSwiper({
+    required this.category,
+    required this.color,
+  });
+
+  final String category;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
+    final contentRequest = ContentRequest();
     return Center(
       child: SizedBox(
-        height: 200,
-        child: Swiper(
-          itemBuilder: (BuildContext context, int index) {
-            return ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              child: Image.network(
-                "https://via.placeholder.com/350x150",
-                fit: BoxFit.fill,
-              ),
-            );
+        height: 220,
+        child: FutureBuilder(
+          future:
+              contentRequest.getContent(category: category, highlighted: true),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Swiper(
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(5, 5),
+                            blurRadius: 3,
+                          )
+                        ]),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      child: Stack(
+                        children: [
+                          Image.network(
+                            (snapshot.data?.result?[index].imageUrl ?? '')
+                                .replaceAll('localhost', '10.0.2.2'),
+                            fit: BoxFit.cover,
+                            width: double.maxFinite,
+                            height: double.maxFinite,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: color.withAlpha(200),
+                              ),
+                              height: 50,
+                              width: 360,
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 3, horizontal: 5),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.white),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(3))),
+                                    child: Text(
+                                      toTitleCase(category),
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      snapshot.data?.result?[index].name ?? '',
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          overflow: TextOverflow.ellipsis),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 15,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                itemCount: snapshot.data?.result?.length ?? 0,
+                viewportFraction: 0.75,
+                scale: 0.9,
+              );
+            } else {
+              return CircularLoader(color: AppColors.primaryColor, size: 50);
+            }
           },
-          itemCount: 10,
-          viewportFraction: 0.75,
-          scale: 0.9,
         ),
       ),
     );
@@ -283,7 +399,7 @@ class _HighlightedMusicians extends StatelessWidget {
               )),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
         _MusicianSwiper()
       ],
@@ -296,22 +412,28 @@ class _MusicianSwiper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final musicianRequest = MusicianRequest();
     return Center(
       child: SizedBox(
-        height: 140,
-        child: Swiper(
-          itemBuilder: (BuildContext context, int index) {
-            return ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              child: Image.network(
-                "https://via.placeholder.com/350x150",
-                fit: BoxFit.fill,
-              ),
-            );
+        height: 160,
+        child: FutureBuilder(
+          future: musicianRequest.getMusicians(highlighted: true),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Swiper(
+                itemBuilder: (BuildContext context, int index) {
+                  return MusicianCard(
+                    musician: snapshot.data?.result?[index],
+                  );
+                },
+                itemCount: snapshot.data?.result?.length ?? 0,
+                viewportFraction: 0.75,
+                scale: 0.9,
+              );
+            } else {
+              return CircularLoader(color: AppColors.primaryColor, size: 50);
+            }
           },
-          itemCount: 10,
-          viewportFraction: 0.75,
-          scale: 0.9,
         ),
       ),
     );

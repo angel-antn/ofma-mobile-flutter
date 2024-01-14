@@ -147,6 +147,9 @@ class _EditProfileCardBodyState extends State<_EditProfileCardBody> {
         return;
       }
 
+      bool wasPremium = Preferences.user?.isPremium ?? false;
+      response.isPremium = wasPremium;
+
       Preferences.user = response;
 
       userDataProvider.updateUser(response);

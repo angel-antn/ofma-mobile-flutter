@@ -4,4 +4,5 @@ class AppRouterConstants {
   static const String registerScreen = 'registerScreen';
   static const String recoverPasswordScreen = 'recoverPasswordScreen';
   static const String editProfileScreen = 'editProfileScreen';
+  static const String concertScreen = 'concertScreen';
 }

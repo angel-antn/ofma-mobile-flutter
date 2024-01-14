@@ -14,7 +14,10 @@ class Preferences {
   }
 
   static set user(User? newUser) {
-    if (newUser == null) return;
+    if (newUser == null) {
+      _preferences.remove('user');
+      return;
+    }
     _preferences.setString('user', newUser.toJson());
   }
 
