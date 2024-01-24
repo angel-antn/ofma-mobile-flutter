@@ -105,9 +105,9 @@ class _AccountCardBody extends StatelessWidget {
       children: [
         CustomTile(
           color: AppColors.pink,
-          icon: FeatherIcons.music,
+          icon: FeatherIcons.shoppingBag,
           onTap: () {},
-          text: 'Boletos',
+          text: 'Ver órdenes',
         ),
         const SizedBox(
           height: 16,
@@ -144,6 +144,15 @@ class _AccountCardBody extends StatelessWidget {
           icon: FeatherIcons.user,
           onTap: () => context.pushNamed(AppRouterConstants.editProfileScreen),
           text: 'Editar perfil',
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        CustomTile(
+          color: AppColors.lightBlue,
+          icon: FeatherIcons.helpCircle,
+          onTap: () {},
+          text: 'Ayuda',
         ),
         const SizedBox(
           height: 16,

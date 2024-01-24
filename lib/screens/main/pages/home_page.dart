@@ -6,12 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/buttons/touchable_opacity.dart';
 import 'package:ofma_app/components/loaders/circular_loader.dart';
 import 'package:ofma_app/components/musician_card/musician_card.dart';
+import 'package:ofma_app/components/video_swiper/video_swiper.dart';
 import 'package:ofma_app/data/remote/ofma/concert_request.dart';
-import 'package:ofma_app/data/remote/ofma/content_request.dart';
 import 'package:ofma_app/data/remote/ofma/musician_request.dart';
+import 'package:ofma_app/enums/cotent_category.dart';
+import 'package:ofma_app/models/concert_response.dart';
+import 'package:ofma_app/models/musician.response.dart';
 import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
-import 'package:ofma_app/utils/to_title_case.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -56,12 +58,25 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _ConcertsSection extends StatelessWidget {
+class _ConcertsSection extends StatefulWidget {
   const _ConcertsSection();
 
   @override
-  Widget build(BuildContext context) {
+  State<_ConcertsSection> createState() => _ConcertsSectionState();
+}
+
+class _ConcertsSectionState extends State<_ConcertsSection> {
+  late Future<ConcertResponse?> concertFutureRequest;
+
+  @override
+  void initState() {
     final concertRequest = ConcertRequest();
+    concertFutureRequest = concertRequest.getConcerts();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final controller = SwiperController();
     return Stack(
       children: [
@@ -76,7 +91,7 @@ class _ConcertsSection extends StatelessWidget {
             width: double.infinity,
             height: 250,
             child: FutureBuilder(
-              future: concertRequest.getConcerts(),
+              future: concertFutureRequest,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Swiper(
@@ -137,7 +152,9 @@ class _ContentSection extends StatelessWidget {
           width: 20,
         ),
         _ContentSectionButton(
-            onTap: () {},
+            onTap: () => context.pushNamed(
+                AppRouterConstants.exclusiveContentScreen,
+                extra: ContentCategory.concert),
             text: 'Conciertos',
             icon: CommunityMaterialIcons.music_circle_outline,
             color: AppColors.pink),
@@ -145,7 +162,9 @@ class _ContentSection extends StatelessWidget {
           width: 30,
         ),
         _ContentSectionButton(
-            onTap: () {},
+            onTap: () => context.pushNamed(
+                AppRouterConstants.exclusiveContentScreen,
+                extra: ContentCategory.interview),
             text: 'Entrevistas',
             icon: CommunityMaterialIcons.microphone_outline,
             color: AppColors.yellow),
@@ -186,22 +205,25 @@ class _ContentSectionButton extends StatelessWidget {
     );
 
     return Expanded(
-      child: Container(
-        height: 130,
-        decoration: boxDecoration,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 70,
-              color: Colors.white,
-            ),
-            Text(
-              text,
-              style: textStyle,
-            )
-          ],
+      child: TouchableOpacity(
+        onTap: () => onTap(),
+        child: Container(
+          height: 130,
+          decoration: boxDecoration,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 70,
+                color: Colors.white,
+              ),
+              Text(
+                text,
+                style: textStyle,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -230,7 +252,7 @@ class _HighlightedConcertVideos extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        _VideoSwiper(
+        VideoSwiper(
           category: 'concierto',
           color: Colors.pinkAccent,
         )
@@ -261,120 +283,11 @@ class _HighlightedEnterviewsVideos extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        _VideoSwiper(
+        VideoSwiper(
           category: 'entrevista',
           color: Colors.orange,
         )
       ],
-    );
-  }
-}
-
-class _VideoSwiper extends StatelessWidget {
-  const _VideoSwiper({
-    required this.category,
-    required this.color,
-  });
-
-  final String category;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final contentRequest = ContentRequest();
-    return Center(
-      child: SizedBox(
-        height: 220,
-        child: FutureBuilder(
-          future:
-              contentRequest.getContent(category: category, highlighted: true),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Swiper(
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(5, 5),
-                            blurRadius: 3,
-                          )
-                        ]),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
-                      child: Stack(
-                        children: [
-                          Image.network(
-                            (snapshot.data?.result?[index].imageUrl ?? '')
-                                .replaceAll('localhost', '10.0.2.2'),
-                            fit: BoxFit.cover,
-                            width: double.maxFinite,
-                            height: double.maxFinite,
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: color.withAlpha(200),
-                              ),
-                              height: 50,
-                              width: 360,
-                              child: Row(
-                                children: [
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 3, horizontal: 5),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.white),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(3))),
-                                    child: Text(
-                                      toTitleCase(category),
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      snapshot.data?.result?[index].name ?? '',
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          overflow: TextOverflow.ellipsis),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                itemCount: snapshot.data?.result?.length ?? 0,
-                viewportFraction: 0.75,
-                scale: 0.9,
-              );
-            } else {
-              return CircularLoader(color: AppColors.primaryColor, size: 50);
-            }
-          },
-        ),
-      ),
     );
   }
 }
@@ -407,17 +320,30 @@ class _HighlightedMusicians extends StatelessWidget {
   }
 }
 
-class _MusicianSwiper extends StatelessWidget {
+class _MusicianSwiper extends StatefulWidget {
   const _MusicianSwiper();
 
   @override
-  Widget build(BuildContext context) {
+  State<_MusicianSwiper> createState() => _MusicianSwiperState();
+}
+
+class _MusicianSwiperState extends State<_MusicianSwiper> {
+  late Future<MusicianResponse?> musiciansFutureRequest;
+
+  @override
+  void initState() {
     final musicianRequest = MusicianRequest();
+    musiciansFutureRequest = musicianRequest.getMusicians(highlighted: true);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
         height: 160,
         child: FutureBuilder(
-          future: musicianRequest.getMusicians(highlighted: true),
+          future: musiciansFutureRequest,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Swiper(

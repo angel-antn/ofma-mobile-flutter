@@ -9,25 +9,24 @@ class ContentResponse {
     this.result,
   });
 
-  factory ContentResponse.fromRawJson(String str) =>
-      ContentResponse.fromJson(json.decode(str));
+  factory ContentResponse.fromJson(String str) =>
+      ContentResponse.fromMap(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
+  String toJson() => json.encode(toMap());
 
-  factory ContentResponse.fromJson(Map<String, dynamic> json) =>
-      ContentResponse(
+  factory ContentResponse.fromMap(Map<String, dynamic> json) => ContentResponse(
         totalCount: json["totalCount"],
         result: json["result"] == null
             ? []
             : List<Content>.from(
-                json["result"]!.map((x) => Content.fromJson(x))),
+                json["result"]!.map((x) => Content.fromMap(x))),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "totalCount": totalCount,
         "result": result == null
             ? []
-            : List<dynamic>.from(result!.map((x) => x.toJson())),
+            : List<dynamic>.from(result!.map((x) => x.toMap())),
       };
 }
 
@@ -54,11 +53,11 @@ class Content {
     this.videoUrl,
   });
 
-  factory Content.fromRawJson(String str) => Content.fromJson(json.decode(str));
+  factory Content.fromJson(String str) => Content.fromMap(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
+  String toJson() => json.encode(toMap());
 
-  factory Content.fromJson(Map<String, dynamic> json) => Content(
+  factory Content.fromMap(Map<String, dynamic> json) => Content(
         id: json["id"],
         name: json["name"],
         description: json["description"],
@@ -70,7 +69,7 @@ class Content {
         videoUrl: json["videoUrl"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
         "description": description,

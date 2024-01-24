@@ -9,7 +9,7 @@ class MusicianCard extends StatelessWidget {
     this.musician,
   });
 
-  final Musician? musician;
+  final Content? musician;
 
   @override
   Widget build(BuildContext context) {

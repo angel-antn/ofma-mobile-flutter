@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ofma_app/components/stripe/stripe_payment_button.dart';
 
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+class TicketPage extends StatelessWidget {
+  const TicketPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Buscar')),
+      appBar: AppBar(centerTitle: true, title: const Text('Boletos')),
       body: const Column(
         children: [
           StripePaymentButton(

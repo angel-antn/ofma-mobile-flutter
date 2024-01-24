@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class MusicianResponse {
   int? totalCount;
-  List<Musician>? result;
+  List<Content>? result;
 
   MusicianResponse({
     this.totalCount,
@@ -19,8 +19,8 @@ class MusicianResponse {
         totalCount: json["totalCount"],
         result: json["result"] == null
             ? []
-            : List<Musician>.from(
-                json["result"]!.map((x) => Musician.fromMap(x))),
+            : List<Content>.from(
+                json["result"]!.map((x) => Content.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -31,7 +31,7 @@ class MusicianResponse {
       };
 }
 
-class Musician {
+class Content {
   String? id;
   String? name;
   String? lastname;
@@ -44,7 +44,7 @@ class Musician {
   String? fullname;
   String? imageUrl;
 
-  Musician({
+  Content({
     this.id,
     this.name,
     this.lastname,
@@ -58,11 +58,11 @@ class Musician {
     this.imageUrl,
   });
 
-  factory Musician.fromJson(String str) => Musician.fromMap(json.decode(str));
+  factory Content.fromJson(String str) => Content.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Musician.fromMap(Map<String, dynamic> json) => Musician(
+  factory Content.fromMap(Map<String, dynamic> json) => Content(
         id: json["id"],
         name: json["name"],
         lastname: json["lastname"],

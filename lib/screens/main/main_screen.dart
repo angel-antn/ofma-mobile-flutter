@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ofma_app/screens/main/pages/account_page.dart';
 import 'package:ofma_app/screens/main/pages/home_page.dart';
 import 'package:ofma_app/screens/main/pages/musicians_page.dart';
-import 'package:ofma_app/screens/main/pages/search_page.dart';
+import 'package:ofma_app/screens/main/pages/ticket_page.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -29,8 +29,8 @@ class _MainScreenState extends State<MainScreen> {
         },
         children: const [
           HomePage(),
-          SearchPage(),
           MusicianPage(),
+          TicketPage(),
           AccountPage(),
         ],
       ),
@@ -49,12 +49,12 @@ class _MainScreenState extends State<MainScreen> {
               title: const Text('Inicio'),
               selectedColor: AppColors.secondaryColor),
           SalomonBottomBarItem(
-              icon: const Icon(FeatherIcons.search),
-              title: const Text('Buscar'),
-              selectedColor: AppColors.secondaryColor),
-          SalomonBottomBarItem(
               icon: const Icon(FeatherIcons.music),
               title: const Text('Musícos'),
+              selectedColor: AppColors.secondaryColor),
+          SalomonBottomBarItem(
+              icon: const Icon(FeatherIcons.grid),
+              title: const Text('Boletos'),
               selectedColor: AppColors.secondaryColor),
           SalomonBottomBarItem(
               icon: const Icon(FeatherIcons.user),

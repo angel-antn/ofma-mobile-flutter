@@ -2,12 +2,15 @@ import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:ofma_app/components/transitions/custom_fade_transition.dart';
 import 'package:ofma_app/components/transitions/swipe_to_right_transition.dart';
+import 'package:ofma_app/enums/cotent_category.dart';
+import 'package:ofma_app/router/codec/multi_codec.dart';
 import 'package:ofma_app/router/router_const.dart';
 
 //transitions
 import 'package:ofma_app/components/transitions/swipe_to_left_transition.dart';
 import 'package:ofma_app/screens/concert/concert_screen.dart';
 import 'package:ofma_app/screens/edit_profile/edit_profile_screen.dart';
+import 'package:ofma_app/screens/exclusive_content/exclusive_content_screen.dart';
 
 //screens
 import 'package:ofma_app/screens/login/login_screen.dart';
@@ -74,7 +77,19 @@ class AppRouter {
           ));
         },
       ),
+      GoRoute(
+        path: '/content',
+        name: AppRouterConstants.exclusiveContentScreen,
+        pageBuilder: (context, state) {
+          final category = state.extra as ContentCategory;
+          return CustomFadeTransition(
+              child: ExclusiveContentScreen(
+            category: category,
+          ));
+        },
+      ),
     ],
+    extraCodec: MultiCodec(),
     redirect: (context, state) {
       final token = Preferences.token;
 

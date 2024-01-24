@@ -24,16 +24,16 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        Image.asset(
-          'assets/backgrounds/login_background.webp',
-          height: double.infinity,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        ),
-        Center(
-          child: SingleChildScrollView(
+      body: Stack(
+        children: [
+          Image.asset(
+            'assets/backgrounds/login_background.webp',
+            height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Center(
+            child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
@@ -46,10 +46,12 @@ class LoginScreen extends StatelessWidget {
                   const _LoginCard(),
                   const SizedBox(height: 25),
                 ],
-              )),
-        ),
-      ],
-    ));
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
