@@ -115,7 +115,7 @@ class _AccountCardBody extends StatelessWidget {
         CustomTile(
           color: AppColors.yellow,
           icon: FeatherIcons.gift,
-          onTap: () {},
+          onTap: () => context.pushNamed(AppRouterConstants.suscriptionScreen),
           text: 'Suscripción',
         ),
         const SizedBox(

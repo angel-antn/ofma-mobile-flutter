@@ -18,6 +18,7 @@ import 'package:ofma_app/screens/main/main_screen.dart';
 import 'package:ofma_app/screens/recover_password/recover_password_screen.dart';
 import 'package:ofma_app/screens/register/register_screen.dart';
 import 'package:ofma_app/data/local/preferences.dart';
+import 'package:ofma_app/screens/suscription/suscription_screen.dart';
 
 class AppRouter {
   static final AppRouter _singleton = AppRouter._internal();
@@ -86,6 +87,13 @@ class AppRouter {
               child: ExclusiveContentScreen(
             category: category,
           ));
+        },
+      ),
+      GoRoute(
+        path: '/suscription',
+        name: AppRouterConstants.suscriptionScreen,
+        pageBuilder: (context, state) {
+          return SwipeToRightTransition(child: const SuscriptionScreen());
         },
       ),
     ],

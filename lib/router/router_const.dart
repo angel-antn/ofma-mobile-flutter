@@ -6,4 +6,5 @@ class AppRouterConstants {
   static const String editProfileScreen = 'editProfileScreen';
   static const String concertScreen = 'concertScreen';
   static const String exclusiveContentScreen = 'exclusiveContentScreen';
+  static const String suscriptionScreen = 'suscriptionScreen';
 }
