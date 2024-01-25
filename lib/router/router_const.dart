@@ -7,4 +7,6 @@ class AppRouterConstants {
   static const String concertScreen = 'concertScreen';
   static const String exclusiveContentScreen = 'exclusiveContentScreen';
   static const String suscriptionScreen = 'suscriptionScreen';
+  static const String qRScannerScreen = 'qRScannerScreen';
+  static const String ordersScreen = 'ordersScreen';
 }

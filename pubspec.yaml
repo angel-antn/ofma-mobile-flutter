@@ -50,6 +50,8 @@ dependencies:
     pin_code_fields: ^8.0.1
     flutter_stripe: ^3.2.0
     skeletonizer: ^1.0.1
+    pagination_flutter: ^0.0.8
+    liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
     flutter_test:
@@ -77,6 +79,7 @@ flutter:
         - assets/logo/
         - assets/backgrounds/
         - assets/images/
+        - assets/gif/
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware

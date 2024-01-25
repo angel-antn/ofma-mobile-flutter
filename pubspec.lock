@@ -232,6 +232,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.0"
+  liquid_pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: liquid_pull_to_refresh
+      sha256: "11e4cd8c5460085a31b479ec4e1cd063eb8e599f35684d57a44dafa1fd1f67f3"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.0.1"
   logging:
     dependency: transitive
     description:
@@ -272,6 +280,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.0"
+  pagination_flutter:
+    dependency: "direct main"
+    description:
+      name: pagination_flutter
+      sha256: "98422b16402f9f407bf4e1ac04e3e933f2440d07aa73d960556118ae832ebe19"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.8"
   path:
     dependency: transitive
     description:

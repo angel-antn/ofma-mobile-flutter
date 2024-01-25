@@ -15,6 +15,8 @@ import 'package:ofma_app/screens/exclusive_content/exclusive_content_screen.dart
 //screens
 import 'package:ofma_app/screens/login/login_screen.dart';
 import 'package:ofma_app/screens/main/main_screen.dart';
+import 'package:ofma_app/screens/orders/orders_screen.dart';
+import 'package:ofma_app/screens/qr_scanner/qr_scanner_screen.dart';
 import 'package:ofma_app/screens/recover_password/recover_password_screen.dart';
 import 'package:ofma_app/screens/register/register_screen.dart';
 import 'package:ofma_app/data/local/preferences.dart';
@@ -94,6 +96,20 @@ class AppRouter {
         name: AppRouterConstants.suscriptionScreen,
         pageBuilder: (context, state) {
           return SwipeToRightTransition(child: const SuscriptionScreen());
+        },
+      ),
+      GoRoute(
+        path: '/scanner',
+        name: AppRouterConstants.qRScannerScreen,
+        pageBuilder: (context, state) {
+          return SwipeToRightTransition(child: const QRScannerScreen());
+        },
+      ),
+      GoRoute(
+        path: '/orders',
+        name: AppRouterConstants.ordersScreen,
+        pageBuilder: (context, state) {
+          return SwipeToRightTransition(child: const OrdersScreen());
         },
       ),
     ],

@@ -106,14 +106,14 @@ class _AccountCardBody extends StatelessWidget {
         CustomTile(
           color: AppColors.pink,
           icon: FeatherIcons.shoppingBag,
-          onTap: () {},
+          onTap: () => context.pushNamed(AppRouterConstants.ordersScreen),
           text: 'Ver órdenes',
         ),
         const SizedBox(
           height: 16,
         ),
         CustomTile(
-          color: AppColors.yellow,
+          color: AppColors.lightBlue,
           icon: FeatherIcons.gift,
           onTap: () => context.pushNamed(AppRouterConstants.suscriptionScreen),
           text: 'Suscripción',
@@ -127,7 +127,8 @@ class _AccountCardBody extends StatelessWidget {
               CustomTile(
                 color: AppColors.purple,
                 icon: FeatherIcons.userCheck,
-                onTap: () {},
+                onTap: () =>
+                    context.pushNamed(AppRouterConstants.qRScannerScreen),
                 text: 'Revisar QRs',
               ),
               const SizedBox(
@@ -149,7 +150,7 @@ class _AccountCardBody extends StatelessWidget {
           height: 16,
         ),
         CustomTile(
-          color: AppColors.lightBlue,
+          color: AppColors.yellow,
           icon: FeatherIcons.helpCircle,
           onTap: () {},
           text: 'Ayuda',
