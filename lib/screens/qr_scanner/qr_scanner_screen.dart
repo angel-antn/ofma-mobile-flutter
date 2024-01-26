@@ -1,6 +1,7 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:ofma_app/components/border_painter/border_painter.dart';
 import 'package:ofma_app/components/buttons/primary_button.dart';
 import 'package:ofma_app/components/fields/custom_text_form_field.dart';
 import 'package:ofma_app/theme/app_colors.dart';
@@ -145,7 +146,7 @@ class _QRImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: CustomPaint(
-        painter: _BorderPainter(),
+        painter: BorderPainter(color: AppColors.lightBlue, thickness: 8.0),
         child: SizedBox(
           width: 200,
           height: 200,
@@ -157,65 +158,5 @@ class _QRImage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _BorderPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    const width = 8.0;
-    const radius = 20.0;
-    const tRadius = 2 * radius;
-    final rect = Rect.fromLTWH(
-      width,
-      width,
-      size.width - 2 * width,
-      size.height - 2 * width,
-    );
-    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(radius));
-    const clippingRect0 = Rect.fromLTWH(
-      0,
-      0,
-      tRadius,
-      tRadius,
-    );
-    final clippingRect1 = Rect.fromLTWH(
-      size.width - tRadius,
-      0,
-      tRadius,
-      tRadius,
-    );
-    final clippingRect2 = Rect.fromLTWH(
-      0,
-      size.height - tRadius,
-      tRadius,
-      tRadius,
-    );
-    final clippingRect3 = Rect.fromLTWH(
-      size.width - tRadius,
-      size.height - tRadius,
-      tRadius,
-      tRadius,
-    );
-
-    final path = Path()
-      ..addRect(clippingRect0)
-      ..addRect(clippingRect1)
-      ..addRect(clippingRect2)
-      ..addRect(clippingRect3);
-
-    canvas.clipPath(path);
-    canvas.drawRRect(
-      rrect,
-      Paint()
-        ..color = AppColors.lightBlue
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = width,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }
