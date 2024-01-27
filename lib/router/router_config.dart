@@ -3,6 +3,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:ofma_app/components/transitions/custom_fade_transition.dart';
 import 'package:ofma_app/components/transitions/swipe_to_right_transition.dart';
 import 'package:ofma_app/enums/cotent_category.dart';
+import 'package:ofma_app/models/payment_params.dart';
 import 'package:ofma_app/router/codec/multi_codec.dart';
 import 'package:ofma_app/router/router_const.dart';
 
@@ -16,6 +17,7 @@ import 'package:ofma_app/screens/exclusive_content/exclusive_content_screen.dart
 import 'package:ofma_app/screens/login/login_screen.dart';
 import 'package:ofma_app/screens/main/main_screen.dart';
 import 'package:ofma_app/screens/orders/orders_screen.dart';
+import 'package:ofma_app/screens/payment/payment_screen.dart';
 import 'package:ofma_app/screens/qr_scanner/qr_scanner_screen.dart';
 import 'package:ofma_app/screens/recover_password/recover_password_screen.dart';
 import 'package:ofma_app/screens/register/register_screen.dart';
@@ -110,6 +112,18 @@ class AppRouter {
         name: AppRouterConstants.ordersScreen,
         pageBuilder: (context, state) {
           return SwipeToRightTransition(child: const OrdersScreen());
+        },
+      ),
+      GoRoute(
+        path: '/payment',
+        name: AppRouterConstants.paymentScreen,
+        pageBuilder: (context, state) {
+          final paymentParams = state.extra as PaymentParams;
+          return SwipeToRightTransition(
+            child: PaymentScreen(
+              paymentParams: paymentParams,
+            ),
+          );
         },
       ),
     ],

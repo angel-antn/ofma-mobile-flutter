@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/buttons/touchable_opacity.dart';
@@ -108,7 +109,10 @@ class _ConcertsSectionState extends State<_ConcertsSection> {
                               const BorderRadius.all(Radius.circular(15)),
                           child: Image.network(
                             (snapshot.data?.result?[index].imageUrl ?? '')
-                                .replaceAll('localhost', '10.0.2.2'),
+                                .replaceAll(
+                              'localhost',
+                              (dotenv.env['LOCALHOST_ENVIRON'] ?? ''),
+                            ),
                             fit: BoxFit.cover,
                           ),
                         ),

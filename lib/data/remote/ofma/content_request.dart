@@ -1,8 +1,9 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:ofma_app/models/content_response.dart';
 
 class ContentRequest {
-  final String _baseUrl = '10.0.2.2:3000';
+  final String _baseUrl = dotenv.env['HOST_API'] ?? '';
   final String _path = '/api/exclusive-content';
 
   Future<ContentResponse?> getContent(

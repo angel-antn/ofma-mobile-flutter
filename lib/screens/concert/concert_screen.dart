@@ -1,12 +1,15 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/buttons/primary_button.dart';
 import 'package:ofma_app/components/buttons/touchable_opacity.dart';
 import 'package:ofma_app/components/concertMuscianList/concert_musician_list.dart';
 import 'package:ofma_app/data/remote/ofma/concert_request.dart';
 import 'package:ofma_app/models/concert_response.dart';
+import 'package:ofma_app/models/payment_params.dart';
+import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:ofma_app/utils/convert_to_12_hour_format.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -321,7 +324,18 @@ class __ConcertBookingState extends State<_ConcertBooking> {
         const SizedBox(
           height: 50,
         ),
-        PrimaryButton(width: double.infinity, onTap: () {}, text: 'Siguiente')
+        PrimaryButton(
+          width: double.infinity,
+          onTap: () => context.pushNamed(
+            AppRouterConstants.paymentScreen,
+            extra: PaymentParams(
+              type: 'boleteria',
+              amount: (widget.concert?.pricePerEntry ?? 0) * qty,
+              concertId: widget.concert?.id ?? '',
+            ),
+          ),
+          text: 'Siguiente',
+        )
       ],
     );
   }
@@ -337,9 +351,15 @@ class _ConcertDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          concert?.description ?? 'lorem ipsum ' * 40,
+          concert?.name ?? 'Lorem ipsum',
+          style: const TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          concert?.description ?? 'lorem ipsum sit amet dolore' * 40,
         ),
         const SizedBox(
           height: 20,
@@ -416,7 +436,10 @@ class _ConcertHeader extends StatelessWidget {
         Image.network(
           (concert?.imageUrl ??
                   'https://cdn.pixabay.com/photo/2016/11/19/09/57/violins-1838390_1280.jpg')
-              .replaceAll('localhost', '10.0.2.2'),
+              .replaceAll(
+            'localhost',
+            (dotenv.env['LOCALHOST_ENVIRON'] ?? ''),
+          ),
           fit: BoxFit.cover,
           width: double.infinity,
           height: 300,
@@ -455,7 +478,7 @@ class _ConcertHeader extends StatelessWidget {
                 ),
                 Text(
                   concert?.name ?? 'Lorem ipsum',
-                  maxLines: 2,
+                  maxLines: 1,
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 34,

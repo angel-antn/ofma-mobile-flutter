@@ -1,9 +1,10 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:ofma_app/data/local/preferences.dart';
 import 'package:ofma_app/models/stripe_response.dart';
 
 class StripeRequest {
-  final String _baseUrl = '10.0.2.2:3000';
+  final String _baseUrl = dotenv.env['HOST_API'] ?? '';
   final String _path = '/api/stripe';
 
   Future<StripeResponse?> getPaymentIntentAndCustomer(

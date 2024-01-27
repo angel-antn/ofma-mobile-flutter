@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ofma_app/models/content_response.dart';
 import 'package:ofma_app/utils/to_title_case.dart';
 
@@ -29,7 +30,10 @@ class ContentCard extends StatelessWidget {
         child: Stack(
           children: [
             Image.network(
-              (content?.imageUrl ?? '').replaceAll('localhost', '10.0.2.2'),
+              (content?.imageUrl ?? '').replaceAll(
+                'localhost',
+                (dotenv.env['LOCALHOST_ENVIRON'] ?? ''),
+              ),
               fit: BoxFit.cover,
               width: double.maxFinite,
               height: double.maxFinite,

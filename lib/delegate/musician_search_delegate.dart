@@ -1,5 +1,6 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ofma_app/components/loaders/circular_loader.dart';
 import 'package:ofma_app/data/remote/ofma/musician_request.dart';
@@ -101,7 +102,10 @@ class _SuggestionsTiles extends StatelessWidget {
                               const BorderRadius.all(Radius.circular(4)),
                           child: Image.network(
                             (snapshot.data?.result?[index].imageUrl ?? '')
-                                .replaceAll('localhost', '10.0.2.2'),
+                                .replaceAll(
+                              'localhost',
+                              (dotenv.env['LOCALHOST_ENVIRON'] ?? ''),
+                            ),
                             fit: BoxFit.cover,
                           ),
                         ),

@@ -1,7 +1,10 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/buttons/primary_button.dart';
+import 'package:ofma_app/models/payment_params.dart';
 import 'package:ofma_app/providers/user_data_provider.dart';
+import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +38,13 @@ class SuscriptionScreen extends StatelessWidget {
               ),
               if (userDataProvider.user?.isPremium == false)
                 PrimaryButton(
-                    width: double.maxFinite, onTap: () {}, text: 'Siguiente'),
+                  width: double.maxFinite,
+                  onTap: () => context.pushNamed(
+                    AppRouterConstants.paymentScreen,
+                    extra: PaymentParams(type: 'suscripcion', amount: 2.99),
+                  ),
+                  text: 'Siguiente',
+                ),
               if (userDataProvider.user?.isPremium == true)
                 const Text('¡Usted ya ha adquirido la suscripcion premium!'),
             ],

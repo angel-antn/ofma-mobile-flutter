@@ -1,5 +1,6 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ofma_app/models/musician.response.dart';
 import 'package:ofma_app/utils/to_title_case.dart';
 
@@ -32,8 +33,10 @@ class MusicianCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
                 child: Image.network(
-                  (musician?.imageUrl ?? '')
-                      .replaceAll('localhost', '10.0.2.2'),
+                  (musician?.imageUrl ?? '').replaceAll(
+                    'localhost',
+                    (dotenv.env['LOCALHOST_ENVIRON'] ?? ''),
+                  ),
                   fit: BoxFit.cover,
                   width: 140,
                   height: 140,
