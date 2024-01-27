@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 class UserResponse {
-  User user;
+  User? user;
   String? token;
 
   UserResponse({
-    required this.user,
-    required this.token,
+    this.user,
+    this.token,
   });
 
   factory UserResponse.fromJson(String str) =>
@@ -15,12 +15,12 @@ class UserResponse {
   String toJson() => json.encode(toMap());
 
   factory UserResponse.fromMap(Map<String, dynamic> json) => UserResponse(
-        user: User.fromMap(json["user"]),
+        user: json["user"] == null ? null : User.fromMap(json["user"]),
         token: json["token"],
       );
 
   Map<String, dynamic> toMap() => {
-        "user": user.toMap(),
+        "user": user?.toMap(),
         "token": token,
       };
 }
@@ -31,15 +31,17 @@ class User {
   String? name;
   String? lastname;
   bool? isCollaborator;
+  DateTime? premiumUntil;
   bool? isPremium;
 
   User({
-    required this.id,
-    required this.email,
-    required this.name,
-    required this.lastname,
-    required this.isCollaborator,
-    required this.isPremium,
+    this.id,
+    this.email,
+    this.name,
+    this.lastname,
+    this.isCollaborator,
+    this.premiumUntil,
+    this.isPremium,
   });
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
@@ -52,6 +54,9 @@ class User {
         name: json["name"],
         lastname: json["lastname"],
         isCollaborator: json["isCollaborator"],
+        premiumUntil: json["premiumUntil"] == null
+            ? null
+            : DateTime.parse(json["premiumUntil"]),
         isPremium: json["isPremium"],
       );
 
@@ -61,6 +66,9 @@ class User {
         "name": name,
         "lastname": lastname,
         "isCollaborator": isCollaborator,
-        "isPremium": isPremium
+        "premiumUntil": premiumUntil == null
+            ? null
+            : "${premiumUntil!.year.toString().padLeft(4, '0')}-${premiumUntil!.month.toString().padLeft(2, '0')}-${premiumUntil!.day.toString().padLeft(2, '0')}",
+        "isPremium": isPremium,
       };
 }

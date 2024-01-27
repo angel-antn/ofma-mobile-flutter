@@ -95,4 +95,17 @@ class UserRequest {
       return null;
     }
   }
+
+  Future<UserResponse?> me() async {
+    final url = Uri.http(_baseUrl, '$_path/me');
+
+    final response = await http
+        .get(url, headers: {'Authorization': 'Bearer ${Preferences.token}'});
+
+    if (response.statusCode == 200) {
+      return UserResponse.fromJson(response.body);
+    } else {
+      return null;
+    }
+  }
 }

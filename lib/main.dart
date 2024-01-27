@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ofma_app/data/remote/ofma/user_request.dart';
 import 'package:ofma_app/services/notifications.dart';
 
 import 'package:provider/provider.dart';
@@ -27,6 +28,16 @@ void main() async {
     Preferences.init(),
     initNotifications()
   ]);
+
+  if (Preferences.user != null) {
+    final userRequest = UserRequest();
+    final userResponse = await userRequest.me();
+    if (userResponse != null) {
+      Preferences.user = userResponse.user;
+      Preferences.token = userResponse.token;
+    }
+  }
+
   runApp(const AppProviderTree());
 }
 
