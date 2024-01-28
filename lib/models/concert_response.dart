@@ -43,45 +43,45 @@ class Concert {
   double? pricePerEntry;
   List<ConcertMusician>? concertMusician;
   String? imageUrl;
+  int? ticketSoldQty;
 
-  Concert({
-    this.id,
-    this.name,
-    this.startDate,
-    this.startAtHour,
-    this.isOpen,
-    this.hasFinish,
-    this.description,
-    this.address,
-    this.entriesQty,
-    this.pricePerEntry,
-    this.concertMusician,
-    this.imageUrl,
-  });
+  Concert(
+      {this.id,
+      this.name,
+      this.startDate,
+      this.startAtHour,
+      this.isOpen,
+      this.hasFinish,
+      this.description,
+      this.address,
+      this.entriesQty,
+      this.pricePerEntry,
+      this.concertMusician,
+      this.imageUrl,
+      this.ticketSoldQty});
 
   factory Concert.fromJson(String str) => Concert.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
   factory Concert.fromMap(Map<String, dynamic> json) => Concert(
-        id: json["id"],
-        name: json["name"],
-        startDate: json["startDate"] == null
-            ? null
-            : DateTime.parse(json["startDate"]),
-        startAtHour: json["startAtHour"],
-        isOpen: json["isOpen"],
-        hasFinish: json["hasFinish"],
-        description: json["description"],
-        address: json["address"],
-        entriesQty: json["entriesQty"],
-        pricePerEntry: json["pricePerEntry"]?.toDouble(),
-        concertMusician: json["concertMusician"] == null
-            ? []
-            : List<ConcertMusician>.from(json["concertMusician"]!
-                .map((x) => ConcertMusician.fromMap(x))),
-        imageUrl: json["imageUrl"],
-      );
+      id: json["id"],
+      name: json["name"],
+      startDate:
+          json["startDate"] == null ? null : DateTime.parse(json["startDate"]),
+      startAtHour: json["startAtHour"],
+      isOpen: json["isOpen"],
+      hasFinish: json["hasFinish"],
+      description: json["description"],
+      address: json["address"],
+      entriesQty: json["entriesQty"],
+      pricePerEntry: json["pricePerEntry"]?.toDouble(),
+      concertMusician: json["concertMusician"] == null
+          ? []
+          : List<ConcertMusician>.from(
+              json["concertMusician"]!.map((x) => ConcertMusician.fromMap(x))),
+      imageUrl: json["imageUrl"],
+      ticketSoldQty: json['ticketSoldQty']);
 
   Map<String, dynamic> toMap() => {
         "id": id,
@@ -99,6 +99,7 @@ class Concert {
             ? []
             : List<dynamic>.from(concertMusician!.map((x) => x.toMap())),
         "imageUrl": imageUrl,
+        "ticketSoldQty": ticketSoldQty
       };
 }
 

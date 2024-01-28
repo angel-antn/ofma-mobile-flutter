@@ -69,6 +69,12 @@ class OrderRequest {
     if (exchangeRateId != null) {
       body['exchangeRateId'] = exchangeRateId;
     }
+    if (paymentParams.ticketQty != null) {
+      body['ticketQty'] = paymentParams.ticketQty.toString();
+    }
+    if (paymentParams.concertId != null) {
+      body['concertId'] = paymentParams.concertId!;
+    }
 
     final response = await http.post(
       url,

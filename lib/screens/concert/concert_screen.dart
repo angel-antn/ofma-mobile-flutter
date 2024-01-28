@@ -12,23 +12,44 @@ import 'package:ofma_app/models/payment_params.dart';
 import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:ofma_app/utils/convert_to_12_hour_format.dart';
+import 'package:ofma_app/utils/not_less_than.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class ConcertScreen extends StatelessWidget {
+class ConcertScreen extends StatefulWidget {
   const ConcertScreen({super.key, required this.id});
 
   final String id;
 
   @override
-  Widget build(BuildContext context) {
+  State<ConcertScreen> createState() => _ConcertScreenState();
+}
+
+class _ConcertScreenState extends State<ConcertScreen> {
+  late Future<Concert?> concerFutureRequest;
+  @override
+  void initState() {
     final concertRequest = ConcertRequest();
+    concerFutureRequest = concertRequest.getConcertById(widget.id);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    setConcert() {
+      setState(() {
+        final concertRequest = ConcertRequest();
+        concerFutureRequest = concertRequest.getConcertById(widget.id);
+      });
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: FutureBuilder(
-        future: concertRequest.getConcertById(id),
+        future: concerFutureRequest,
         builder: (context, concertSnapshot) {
           return _ConcertPage(
             concert: concertSnapshot.data,
+            setConcert: setConcert,
           );
         },
       ),
@@ -37,9 +58,10 @@ class ConcertScreen extends StatelessWidget {
 }
 
 class _ConcertPage extends StatelessWidget {
-  const _ConcertPage({this.concert});
+  const _ConcertPage({this.concert, required this.setConcert});
 
   final Concert? concert;
+  final Function setConcert;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +71,10 @@ class _ConcertPage extends StatelessWidget {
         child: Stack(
           children: [
             _ConcertHeader(concert: concert),
-            _ConcertBody(concert: concert)
+            _ConcertBody(
+              concert: concert,
+              setConcert: setConcert,
+            )
           ],
         ),
       ),
@@ -60,9 +85,11 @@ class _ConcertPage extends StatelessWidget {
 class _ConcertBody extends StatefulWidget {
   const _ConcertBody({
     required this.concert,
+    required this.setConcert,
   });
 
   final Concert? concert;
+  final Function setConcert;
 
   @override
   State<_ConcertBody> createState() => _ConcertBodyState();
@@ -115,6 +142,7 @@ class _ConcertBodyState extends State<_ConcertBody> {
           if (currentIndex == 1)
             _ConcertBooking(
               concert: widget.concert,
+              setConcert: widget.setConcert,
             )
         ],
       ),
@@ -123,9 +151,10 @@ class _ConcertBodyState extends State<_ConcertBody> {
 }
 
 class _ConcertBooking extends StatefulWidget {
-  const _ConcertBooking({this.concert});
+  const _ConcertBooking({this.concert, required this.setConcert});
 
   final Concert? concert;
+  final Function setConcert;
 
   @override
   State<_ConcertBooking> createState() => __ConcertBookingState();
@@ -137,7 +166,12 @@ class __ConcertBookingState extends State<_ConcertBooking> {
   Widget build(BuildContext context) {
     qtyPlus() {
       setState(() {
-        if (qty < (widget.concert?.entriesQty ?? 0)) {
+        if (qty <
+            notLessThan(
+              lessThan: 0,
+              number: (widget.concert?.entriesQty ?? 0) -
+                  (widget.concert?.ticketSoldQty ?? 0),
+            )) {
           qty++;
         }
       });
@@ -322,20 +356,79 @@ class __ConcertBookingState extends State<_ConcertBooking> {
           ],
         ),
         const SizedBox(
-          height: 50,
+          height: 20,
         ),
-        PrimaryButton(
-          width: double.infinity,
-          onTap: () => context.pushNamed(
-            AppRouterConstants.paymentScreen,
-            extra: PaymentParams(
-              type: 'boleteria',
-              amount: (widget.concert?.pricePerEntry ?? 0) * qty,
-              concertId: widget.concert?.id ?? '',
+        if (widget.concert?.isOpen == true &&
+            notLessThan(
+                    lessThan: 0,
+                    number: (widget.concert?.entriesQty ?? 0) -
+                        (widget.concert?.ticketSoldQty ?? 0)) !=
+                0)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(notLessThan(
+                            lessThan: 0,
+                            number: (widget.concert?.entriesQty ?? 0) -
+                                (widget.concert?.ticketSoldQty ?? 0)) !=
+                        1
+                    ? 'Quedan ${notLessThan(lessThan: 0, number: (widget.concert?.entriesQty ?? 0) - (widget.concert?.ticketSoldQty ?? 0))} boletos disponibles'
+                    : 'Queda 1 boleto disponible'),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              PrimaryButton(
+                width: double.infinity,
+                onTap: () => context
+                    .pushNamed(
+                  AppRouterConstants.paymentScreen,
+                  extra: PaymentParams(
+                      type: 'boleteria',
+                      amount: (widget.concert?.pricePerEntry ?? 0) * qty,
+                      concertId: widget.concert?.id ?? '',
+                      ticketQty: qty),
+                )
+                    .then(
+                  (_) {
+                    widget.setConcert();
+                  },
+                ),
+                text: 'Siguiente',
+              ),
+            ],
+          ),
+        if (widget.concert?.isOpen == false)
+          const Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Text('La venta de boletos para este concierto'),
+                Text('se encuentra cerrada')
+              ],
             ),
           ),
-          text: 'Siguiente',
-        )
+        if (widget.concert?.isOpen == true &&
+            notLessThan(
+                    lessThan: 0,
+                    number: (widget.concert?.entriesQty ?? 0) -
+                        (widget.concert?.ticketSoldQty ?? 0)) ==
+                0)
+          const Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Text('Se han agotado los boletos disponibles'),
+                Text('para este concierto')
+              ],
+            ),
+          ),
       ],
     );
   }
