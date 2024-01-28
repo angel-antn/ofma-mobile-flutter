@@ -1,7 +1,10 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:ofma_app/components/buttons/primary_button.dart';
+import 'package:ofma_app/data/local/preferences.dart';
+import 'package:ofma_app/data/remote/ofma/user_request.dart';
 import 'package:ofma_app/models/payment_params.dart';
 import 'package:ofma_app/providers/user_data_provider.dart';
 import 'package:ofma_app/router/router_const.dart';
@@ -17,37 +20,56 @@ class SuscriptionScreen extends StatelessWidget {
         Provider.of<UserDataProvider>(context);
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: const Text('Suscripción')),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              const Stack(
-                children: [
-                  _SuscriptionHeader(),
-                  _SucriptionBody(),
-                  _SuscriptionPrice(),
-                  _SuscriptionTitle(),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              if (userDataProvider.user?.isPremium == false)
-                PrimaryButton(
-                  width: double.maxFinite,
-                  onTap: () => context.pushNamed(
-                    AppRouterConstants.paymentScreen,
-                    extra: PaymentParams(type: 'suscripcion', amount: 2.99),
-                  ),
-                  text: 'Siguiente',
+      body: LiquidPullToRefresh(
+        height: 200,
+        onRefresh: () async {
+          final userRequest = UserRequest();
+          final userResponse = await userRequest.me();
+          if (userResponse != null) {
+            Preferences.user = userResponse.user;
+            userDataProvider.updateUser(Preferences.user!);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
                 ),
-              if (userDataProvider.user?.isPremium == true)
-                const Text('¡Usted ya ha adquirido la suscripcion premium!'),
-            ],
+                const Stack(
+                  children: [
+                    _SuscriptionHeader(),
+                    _SucriptionBody(),
+                    _SuscriptionPrice(),
+                    _SuscriptionTitle(),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                if (userDataProvider.user?.isPremium == false)
+                  PrimaryButton(
+                    width: double.maxFinite,
+                    onTap: () => context.pushNamed(
+                      AppRouterConstants.paymentScreen,
+                      extra: PaymentParams(type: 'suscripcion', amount: 2.99),
+                    ),
+                    text: 'Siguiente',
+                  ),
+                if (userDataProvider.user?.isPremium == true)
+                  Column(
+                    children: [
+                      const Text(
+                          '¡Usted ya ha adquirido la suscripción premium!'),
+                      Text(
+                          'Vence el ${userDataProvider.user?.premiumUntil?.day ?? '00'}/${userDataProvider.user?.premiumUntil?.month ?? '00'}/${userDataProvider.user?.premiumUntil?.year ?? '00'}')
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),

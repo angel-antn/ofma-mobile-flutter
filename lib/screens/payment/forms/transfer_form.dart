@@ -1,25 +1,32 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:ofma_app/components/buttons/primary_button.dart';
 import 'package:ofma_app/components/fields/custom_date_text_input.dart';
 import 'package:ofma_app/components/fields/custom_text_field.dart';
 import 'package:ofma_app/components/payment_detail_tile/payment_detail_tile.dart';
 import 'package:ofma_app/components/payment_form_title/payment_form_title.dart';
 import 'package:ofma_app/components/payment_radio_list_tile/payment_radio_list_tile.dart';
+import 'package:ofma_app/data/remote/ofma/orders_request.dart';
 import 'package:ofma_app/models/bank_account_response.dart';
 import 'package:ofma_app/models/exchange_rate_response.dart';
+import 'package:ofma_app/models/payment_params.dart';
+import 'package:ofma_app/router/router_const.dart';
+import 'package:ofma_app/utils/check_ref_and_date.dart';
 
 class TransferForm extends StatefulWidget {
   const TransferForm({
     super.key,
     this.transferBankAccounts,
-    required this.amount,
+    required this.paymentParams,
     this.exchangeRate,
   });
 
   final TransferBankAccounts? transferBankAccounts;
   final ExchangeRateResponse? exchangeRate;
-  final double amount;
+  final PaymentParams paymentParams;
 
   @override
   State<TransferForm> createState() => _TransferFormState();
@@ -33,6 +40,7 @@ class _TransferFormState extends State<TransferForm> {
   int? selectedValue;
 
   TextEditingController dateInput = TextEditingController();
+  TextEditingController refInput = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +67,7 @@ class _TransferFormState extends State<TransferForm> {
       children: [
         PaymentFormTitle(
           title: 'Registrar pago',
-          amount: widget.amount,
+          amount: widget.paymentParams.amount,
           exchangeRate: widget.exchangeRate,
         ),
         const SizedBox(
@@ -98,14 +106,42 @@ class _TransferFormState extends State<TransferForm> {
               const SizedBox(
                 height: 20,
               ),
-              const CustomTextField(
+              CustomTextField(
+                  textInputFormatter: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
+                  textInputType: TextInputType.number,
+                  textEditingController: refInput,
                   hintText: 'Número de referencia',
                   icon: CommunityMaterialIcons.tag_outline),
               const SizedBox(
                 height: 20,
               ),
               PrimaryButton(
-                  width: double.infinity, onTap: () {}, text: 'Siguiente'),
+                  width: double.infinity,
+                  onTap: () {
+                    if (checkRefAndDate(
+                      ref: refInput.text,
+                      date: dateInput.text,
+                    )) {
+                      DateFormat format = DateFormat('dd/MM/yyyy');
+                      DateTime paidAt = format.parse(dateInput.text);
+
+                      final orderRequest = OrderRequest();
+                      context.pushReplacementNamed(
+                        AppRouterConstants.loadingPaymentScreen,
+                        extra: orderRequest.createOrder(
+                          reference: refInput.text,
+                          paidAt: paidAt,
+                          paymentParams: widget.paymentParams,
+                          exchangeRateId: widget.exchangeRate?.id,
+                          transferBankAccountId: widget
+                              .transferBankAccounts?.result?[selectedValue!].id,
+                        ),
+                      );
+                    }
+                  },
+                  text: 'Siguiente'),
               const SizedBox(height: 30),
             ],
           )

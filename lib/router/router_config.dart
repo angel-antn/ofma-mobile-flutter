@@ -3,6 +3,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:ofma_app/components/transitions/custom_fade_transition.dart';
 import 'package:ofma_app/components/transitions/swipe_to_right_transition.dart';
 import 'package:ofma_app/enums/cotent_category.dart';
+import 'package:ofma_app/models/orders_response.dart';
 import 'package:ofma_app/models/payment_params.dart';
 import 'package:ofma_app/router/codec/multi_codec.dart';
 import 'package:ofma_app/router/router_const.dart';
@@ -12,12 +13,15 @@ import 'package:ofma_app/components/transitions/swipe_to_left_transition.dart';
 import 'package:ofma_app/screens/concert/concert_screen.dart';
 import 'package:ofma_app/screens/edit_profile/edit_profile_screen.dart';
 import 'package:ofma_app/screens/exclusive_content/exclusive_content_screen.dart';
+import 'package:ofma_app/screens/loading_payment/loading_payment_screen.dart';
 
 //screens
 import 'package:ofma_app/screens/login/login_screen.dart';
 import 'package:ofma_app/screens/main/main_screen.dart';
 import 'package:ofma_app/screens/orders/orders_screen.dart';
 import 'package:ofma_app/screens/payment/payment_screen.dart';
+import 'package:ofma_app/screens/payment_result/payment_confirmed_screen.dart';
+import 'package:ofma_app/screens/payment_result/payment_failed_screen.dart';
 import 'package:ofma_app/screens/qr_scanner/qr_scanner_screen.dart';
 import 'package:ofma_app/screens/recover_password/recover_password_screen.dart';
 import 'package:ofma_app/screens/register/register_screen.dart';
@@ -123,6 +127,36 @@ class AppRouter {
             child: PaymentScreen(
               paymentParams: paymentParams,
             ),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/loading-payment',
+        name: AppRouterConstants.loadingPaymentScreen,
+        pageBuilder: (context, state) {
+          final createOrderFutureRequest = state.extra as Future<Order?>;
+          return SwipeToRightTransition(
+            child: LoadingPaymentScreen(
+              createOrderFutureRequest: createOrderFutureRequest,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/payment-confirmed',
+        name: AppRouterConstants.paymentConfirmedScreen,
+        pageBuilder: (context, state) {
+          return SwipeToRightTransition(
+            child: const PaymentConfirmedScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/payment-failed',
+        name: AppRouterConstants.paymentFailedScreen,
+        pageBuilder: (context, state) {
+          return SwipeToRightTransition(
+            child: const PaymentFailedScreen(),
           );
         },
       ),

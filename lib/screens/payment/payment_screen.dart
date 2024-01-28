@@ -67,7 +67,7 @@ class _PaymentHeader extends StatelessWidget {
       height: 180,
       width: double.maxFinite,
       child: Image.asset(
-        'assets/backgrounds/payment_background.png',
+        'assets/backgrounds/payment_background.webp',
         fit: BoxFit.cover,
       ),
     );
@@ -283,24 +283,24 @@ class _PaymentBodyState extends State<_PaymentBody> {
                   transferBankAccounts: paymentSnapshot
                       .data?.bankAccountResponse?.transferBankAccounts,
                   exchangeRate: paymentSnapshot.data?.exchangeRateResponse,
-                  amount: widget.paymentParams.amount,
+                  paymentParams: widget.paymentParams,
                 );
               case 1:
                 return MobilePayForm(
                   mobilePayBankAccounts: paymentSnapshot
                       .data?.bankAccountResponse?.mobilePayBankAccounts,
                   exchangeRate: paymentSnapshot.data?.exchangeRateResponse,
-                  amount: widget.paymentParams.amount,
+                  paymentParams: widget.paymentParams,
                 );
               case 2:
                 return ZelleForm(
                   zelleBankAccounts: paymentSnapshot
                       .data?.bankAccountResponse?.zelleBankAccounts,
-                  amount: widget.paymentParams.amount,
+                  paymentParams: widget.paymentParams,
                 );
               case 3:
-                return const StripeForm(
-                  amount: 15,
+                return StripeForm(
+                  paymentParams: widget.paymentParams,
                 );
               default:
                 return const SizedBox();

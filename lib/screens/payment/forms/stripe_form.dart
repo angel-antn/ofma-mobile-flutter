@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ofma_app/components/payment_form_title/payment_form_title.dart';
 import 'package:ofma_app/components/stripe/stripe_payment_button.dart';
+import 'package:ofma_app/models/payment_params.dart';
 
 class StripeForm extends StatelessWidget {
   const StripeForm({
     super.key,
-    required this.amount,
+    required this.paymentParams,
   });
 
-  final double amount;
+  final PaymentParams paymentParams;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class StripeForm extends StatelessWidget {
       children: [
         PaymentFormTitle(
           title: 'Validar pago',
-          amount: amount,
+          amount: paymentParams.amount,
         ),
         const SizedBox(
           height: 40,
@@ -45,9 +46,10 @@ class StripeForm extends StatelessWidget {
           height: 30,
         ),
         StripePaymentButton(
+          paymentParams: paymentParams,
           width: double.infinity,
           text: 'Siguiente',
-          amount: amount,
+          amount: paymentParams.amount,
         )
       ],
     );

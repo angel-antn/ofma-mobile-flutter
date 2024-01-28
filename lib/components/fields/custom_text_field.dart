@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -7,11 +8,17 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     required this.icon,
     this.onSubmit,
+    this.textEditingController,
+    this.textInputType,
+    this.textInputFormatter,
   });
 
   final String hintText;
   final IconData icon;
   final Function? onSubmit;
+  final TextEditingController? textEditingController;
+  final TextInputType? textInputType;
+  final List<TextInputFormatter>? textInputFormatter;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +42,9 @@ class CustomTextField extends StatelessWidget {
         color: AppColors.secondaryColor, fontWeight: FontWeight.normal);
 
     return TextField(
+      inputFormatters: textInputFormatter,
+      keyboardType: textInputType,
+      controller: textEditingController,
       autocorrect: false,
       style: textStyle,
       onSubmitted: onSubmit != null ? (value) => onSubmit!(value) : null,

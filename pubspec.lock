@@ -198,6 +198,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.1"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      sha256: b39c753e909d4796906c5696a14daf33639a76e017136c8d82bf3e620ce5bb8e
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.2.0"
   flutter_stripe:
     dependency: "direct main"
     description:
@@ -280,14 +288,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.8.1"
-  jumping_dot:
-    dependency: "direct main"
-    description:
-      name: jumping_dot
-      sha256: a2f755140da73d018bf5198acd83cdd2898a393e5ea45ee94250b9ba44566d1c
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.6"
   jwt_decoder:
     dependency: "direct main"
     description:
