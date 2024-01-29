@@ -81,7 +81,7 @@ class OfmaApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     final channel = IOWebSocketChannel.connect(
-        'ws://10.0.2.2:80/stream?token=${dotenv.env['PUSH_SERVER_KEY'] ?? ''}');
+        'ws://${dotenv.env['PUSH_SERVER_HOST'] ?? ''}/stream?token=${dotenv.env['PUSH_SERVER_KEY'] ?? ''}');
     channel.stream.listen((message) {
       final jsonMessage = jsonDecode(message);
       if (jsonMessage['title'] == (Preferences.user?.id ?? '')) {

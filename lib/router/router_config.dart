@@ -5,6 +5,7 @@ import 'package:ofma_app/components/transitions/swipe_to_right_transition.dart';
 import 'package:ofma_app/enums/cotent_category.dart';
 import 'package:ofma_app/models/orders_response.dart';
 import 'package:ofma_app/models/payment_params.dart';
+import 'package:ofma_app/models/use_ticket_response.dart';
 import 'package:ofma_app/router/codec/multi_codec.dart';
 import 'package:ofma_app/router/router_const.dart';
 
@@ -13,6 +14,7 @@ import 'package:ofma_app/components/transitions/swipe_to_left_transition.dart';
 import 'package:ofma_app/screens/concert/concert_screen.dart';
 import 'package:ofma_app/screens/edit_profile/edit_profile_screen.dart';
 import 'package:ofma_app/screens/exclusive_content/exclusive_content_screen.dart';
+import 'package:ofma_app/screens/exclusive_content_details/exclusive_content_details_screen.dart';
 import 'package:ofma_app/screens/loading_payment/loading_payment_screen.dart';
 
 //screens
@@ -22,6 +24,10 @@ import 'package:ofma_app/screens/orders/orders_screen.dart';
 import 'package:ofma_app/screens/payment/payment_screen.dart';
 import 'package:ofma_app/screens/payment_result/payment_confirmed_screen.dart';
 import 'package:ofma_app/screens/payment_result/payment_failed_screen.dart';
+import 'package:ofma_app/screens/qr_loading/qr_loading_screeen.dart';
+import 'package:ofma_app/screens/qr_result/qr_confirmed_screen.dart';
+import 'package:ofma_app/screens/qr_result/qr_failed_screen.dart';
+
 import 'package:ofma_app/screens/qr_scanner/qr_scanner_screen.dart';
 import 'package:ofma_app/screens/recover_password/recover_password_screen.dart';
 import 'package:ofma_app/screens/register/register_screen.dart';
@@ -146,7 +152,7 @@ class AppRouter {
         path: '/payment-confirmed',
         name: AppRouterConstants.paymentConfirmedScreen,
         pageBuilder: (context, state) {
-          return SwipeToRightTransition(
+          return CustomFadeTransition(
             child: const PaymentConfirmedScreen(),
           );
         },
@@ -155,9 +161,52 @@ class AppRouter {
         path: '/payment-failed',
         name: AppRouterConstants.paymentFailedScreen,
         pageBuilder: (context, state) {
-          return SwipeToRightTransition(
+          return CustomFadeTransition(
             child: const PaymentFailedScreen(),
           );
+        },
+      ),
+      GoRoute(
+        path: '/loading-ticket',
+        name: AppRouterConstants.qRLoadingScreen,
+        pageBuilder: (context, state) {
+          final useTicketFutureRequest =
+              state.extra as Future<UseTicketResponse?>;
+          return SwipeToRightTransition(
+            child: QRLoadingScreen(
+              useTicketFutureRequest: useTicketFutureRequest,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/ticket-confirmed',
+        name: AppRouterConstants.qRConfirmedScreen,
+        pageBuilder: (context, state) {
+          final useTicketResponse = state.extra as UseTicketResponse;
+          return CustomFadeTransition(
+            child: QRConfirmedScreen(useTicketResponse: useTicketResponse),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/ticket-failed',
+        name: AppRouterConstants.qRFailedScreen,
+        pageBuilder: (context, state) {
+          return CustomFadeTransition(
+            child: const QRFailedScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/conctent/:type/:id',
+        name: AppRouterConstants.exclusiveContentDetailsScreen,
+        pageBuilder: (context, state) {
+          return CustomFadeTransition(
+              child: ExclusiveContentDetailsScreen(
+            id: state.pathParameters['id']!,
+            type: state.pathParameters['type']!,
+          ));
         },
       ),
     ],

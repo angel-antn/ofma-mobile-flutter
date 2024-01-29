@@ -38,6 +38,7 @@ class Content {
   bool? isHighlighted;
   bool? isShown;
   bool? isDraft;
+  List<ExclusiveContentMusician>? exclusiveContentMusician;
   String? imageUrl;
   String? videoUrl;
 
@@ -49,6 +50,7 @@ class Content {
     this.isHighlighted,
     this.isShown,
     this.isDraft,
+    this.exclusiveContentMusician,
     this.imageUrl,
     this.videoUrl,
   });
@@ -65,6 +67,11 @@ class Content {
         isHighlighted: json["isHighlighted"],
         isShown: json["isShown"],
         isDraft: json["isDraft"],
+        exclusiveContentMusician: json["exclusiveContentMusician"] == null
+            ? []
+            : List<ExclusiveContentMusician>.from(
+                json["exclusiveContentMusician"]!
+                    .map((x) => ExclusiveContentMusician.fromMap(x))),
         imageUrl: json["imageUrl"],
         videoUrl: json["videoUrl"],
       );
@@ -77,7 +84,57 @@ class Content {
         "isHighlighted": isHighlighted,
         "isShown": isShown,
         "isDraft": isDraft,
+        "exclusiveContentMusician": exclusiveContentMusician == null
+            ? []
+            : List<dynamic>.from(
+                exclusiveContentMusician!.map((x) => x.toMap())),
         "imageUrl": imageUrl,
         "videoUrl": videoUrl,
+      };
+}
+
+class ExclusiveContentMusician {
+  String? id;
+  String? musicianId;
+  String? role;
+  String? name;
+  String? lastname;
+  String? fullname;
+  String? imageUrl;
+
+  ExclusiveContentMusician({
+    this.id,
+    this.musicianId,
+    this.role,
+    this.name,
+    this.lastname,
+    this.fullname,
+    this.imageUrl,
+  });
+
+  factory ExclusiveContentMusician.fromJson(String str) =>
+      ExclusiveContentMusician.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory ExclusiveContentMusician.fromMap(Map<String, dynamic> json) =>
+      ExclusiveContentMusician(
+        id: json["id"],
+        musicianId: json["musicianId"],
+        role: json["role"],
+        name: json["name"],
+        lastname: json["lastname"],
+        fullname: json["fullname"],
+        imageUrl: json["imageUrl"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "musicianId": musicianId,
+        "role": role,
+        "name": name,
+        "lastname": lastname,
+        "fullname": fullname,
+        "imageUrl": imageUrl,
       };
 }

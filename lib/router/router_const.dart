@@ -13,4 +13,9 @@ class AppRouterConstants {
   static const String loadingPaymentScreen = 'loadingPaymentScreen';
   static const String paymentFailedScreen = 'paymentFailedScreen';
   static const String paymentConfirmedScreen = 'paymentConfirmedScreen';
+  static const String qRConfirmedScreen = 'qRConfirmedScreen';
+  static const String qRFailedScreen = 'qRFailedScreen';
+  static const String qRLoadingScreen = 'qRLoadingScreen';
+  static const String exclusiveContentDetailsScreen =
+      'exclusiveContentDetailsScreen';
 }

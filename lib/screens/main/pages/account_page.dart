@@ -1,5 +1,6 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/tiles/custom_tile.dart';
 import 'package:ofma_app/data/local/preferences.dart';
@@ -8,6 +9,7 @@ import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:ofma_app/utils/to_title_case.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -152,7 +154,10 @@ class _AccountCardBody extends StatelessWidget {
         CustomTile(
           color: AppColors.yellow,
           icon: FeatherIcons.helpCircle,
-          onTap: () {},
+          onTap: () {
+            launchUrl(Uri.parse('http://${dotenv.env['FAQ_HOST'] ?? ''}'),
+                mode: LaunchMode.externalApplication);
+          },
           text: 'Ayuda',
         ),
         const SizedBox(

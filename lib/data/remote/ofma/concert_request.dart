@@ -23,6 +23,9 @@ class ConcertRequest {
 
     final response = await http.get(url);
 
+    //TODO: for presentation only
+    await Future.delayed(Duration(milliseconds: 1000));
+
     if (response.statusCode == 200) {
       return Concert.fromJson(response.body);
     } else {

@@ -1,7 +1,8 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ofma_app/components/video_swiper/video_swiper.dart';
-import 'package:ofma_app/delegate/musician_search_delegate.dart';
+import 'package:ofma_app/delegate/concert_search_delegate.dart';
+import 'package:ofma_app/delegate/interview_search_delegate.dart';
 import 'package:ofma_app/enums/cotent_category.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:ofma_app/utils/to_plural.dart';
@@ -21,7 +22,11 @@ class ExclusiveContentScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: MuscianSearchDelegate());
+              showSearch(
+                  context: context,
+                  delegate: category.value == ContentCategory.concert.value
+                      ? ConcertSearchDelegate()
+                      : InterviewsSearchDelegate());
             },
             icon: const Icon(FeatherIcons.search),
             color: AppColors.secondaryColor,

@@ -1,10 +1,59 @@
+import 'package:flutter/scheduler.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/border_painter/border_painter.dart';
 import 'package:ofma_app/components/buttons/primary_button.dart';
-import 'package:ofma_app/components/fields/custom_text_form_field.dart';
+import 'package:ofma_app/components/fields/custom_text_field.dart';
+import 'package:ofma_app/data/remote/ofma/ticket_request.dart';
+import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
+import 'package:ofma_app/utils/is_valid_uuid.dart';
+
+qrScan(BuildContext context) async {
+  if (await Permission.camera.request().isGranted &&
+      await Permission.storage.request().isGranted) {
+    try {
+      String value = await scanner.scan() ?? '';
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        validateCode(value, context);
+      });
+    } catch (_) {
+      Fluttertoast.showToast(
+          msg: 'Código no válido', backgroundColor: Colors.grey);
+    }
+  }
+}
+
+qrPhoto(BuildContext context) async {
+  if (await Permission.camera.request().isGranted &&
+      await Permission.storage.request().isGranted) {
+    try {
+      String value = await scanner.scanPhoto();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        validateCode(value, context);
+      });
+    } catch (_) {
+      Fluttertoast.showToast(
+          msg: 'Código no válido', backgroundColor: Colors.grey);
+    }
+  }
+}
+
+validateCode(String value, BuildContext context) {
+  if (isValidUUID(value)) {
+    final ticketRequest = TicketRequest();
+    context.pushNamed(AppRouterConstants.qRLoadingScreen,
+        extra: ticketRequest.useTicket(value));
+  } else {
+    Fluttertoast.showToast(
+        msg: 'Código no válido', backgroundColor: Colors.grey);
+  }
+}
 
 class QRScannerScreen extends StatelessWidget {
   const QRScannerScreen({super.key});
@@ -46,29 +95,22 @@ class _QRScannerBody extends StatelessWidget {
         boxShadow: [
           BoxShadow(color: Colors.black12, offset: Offset(0, 5), blurRadius: 15)
         ]);
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50),
+        padding: EdgeInsets.symmetric(horizontal: 50),
         child: Column(
           children: [
-            const SizedBox(
-              height: 100,
+            SizedBox(
+              height: 40,
             ),
-            const _QRImageCard(boxDecoration: boxDecoration),
-            const SizedBox(
+            _QRImageCard(boxDecoration: boxDecoration),
+            SizedBox(
               height: 20,
             ),
-            const _QRSearchCard(boxDecoration: boxDecoration),
-            const SizedBox(
+            _QRSearchCard(boxDecoration: boxDecoration),
+            SizedBox(
               height: 30,
             ),
-            PrimaryButton(
-                width: double.maxFinite,
-                onTap: () {},
-                text: 'Empezar a escanear'),
-            const SizedBox(
-              height: 20,
-            )
           ],
         ),
       ),
@@ -85,21 +127,39 @@ class _QRSearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController textEditingController = TextEditingController();
+
     return Container(
       width: double.maxFinite,
       padding: const EdgeInsets.all(20),
       decoration: boxDecoration,
-      child: const Column(
+      child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text('O ingresa el codigo asociado debajo'),
-          SizedBox(
+          const Text('O ingresa el código asociado debajo'),
+          const SizedBox(
             height: 20,
           ),
-          CustomTextFormField(
-              hintText: 'Código asociado', icon: FeatherIcons.search)
+          CustomTextField(
+            textEditingController: textEditingController,
+            hintText: 'Código asociado',
+            icon: FeatherIcons.search,
+            onSubmit: (value) {
+              validateCode(value, context);
+            },
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          PrimaryButton(
+              width: double.infinity,
+              onTap: () {
+                final String value = textEditingController.text;
+                validateCode(value, context);
+              },
+              text: 'Verificar código')
         ],
       ),
     );
@@ -119,19 +179,56 @@ class _QRImageCard extends StatelessWidget {
       width: double.maxFinite,
       padding: const EdgeInsets.all(20),
       decoration: boxDecoration,
-      child: const Column(
+      child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          Text('Alinea el código QR dentro del marco'),
-          Text('para escanearlo'),
-          SizedBox(
+          const Text('Alinea el código QR dentro del marco'),
+          const Text('para escanearlo'),
+          const SizedBox(
             height: 20,
           ),
-          _QRImage(),
-          SizedBox(
-            height: 30,
+          const _QRImage(),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text('Elija cómo escanear el código QR'),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: PrimaryButton(
+                          width: double.maxFinite,
+                          onTap: () => qrScan(context),
+                          text: 'Cámara'),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: PrimaryButton(
+                          width: double.maxFinite,
+                          onTap: () => qrPhoto(context),
+                          text: 'Galería'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

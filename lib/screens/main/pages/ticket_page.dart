@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:ofma_app/components/border_painter/border_painter.dart';
 import 'package:ofma_app/components/loaders/circular_loader.dart';
@@ -307,24 +308,33 @@ class _TicketStatus extends StatelessWidget {
       width: double.maxFinite,
       height: 90,
       alignment: Alignment.center,
-      child: Container(
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-            color: AppColors.purple.withAlpha(120), shape: BoxShape.circle),
-        child: Center(
-            child: Container(
-          decoration:
-              BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
-          height: 65,
-          width: 65,
-          child: Icon(
-            isValid ? Icons.done_rounded : Icons.close_rounded,
-            color: Colors.white,
-            size: 45,
+      child: Center(
+          child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SpinKitDoubleBounce(
+            color: AppColors.purple,
+            size: 90,
           ),
-        )),
-      ),
+          Container(
+            decoration: BoxDecoration(
+                color: AppColors.purple.withAlpha(120), shape: BoxShape.circle),
+            height: 90,
+            width: 90,
+          ),
+          Container(
+            decoration:
+                BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+            height: 65,
+            width: 65,
+            child: Icon(
+              isValid ? Icons.done_rounded : Icons.close_rounded,
+              color: Colors.white,
+              size: 45,
+            ),
+          ),
+        ],
+      )),
     );
   }
 }

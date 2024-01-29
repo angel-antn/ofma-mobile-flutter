@@ -39,7 +39,11 @@ class MuscianSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return SizedBox();
+    if (query.isEmpty) {
+      return const _SuggestionImage();
+    } else {
+      return _SuggestionsTiles(query);
+    }
   }
 
   @override

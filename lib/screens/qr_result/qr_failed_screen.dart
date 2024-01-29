@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 
-class PaymentFailedScreen extends StatelessWidget {
-  const PaymentFailedScreen({super.key});
+class QRFailedScreen extends StatelessWidget {
+  const QRFailedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
         body: Stack(
       children: [
-        _FailedPaymentBackground(),
-        _FailedPaymentBody(),
+        _FailedQRBackground(),
+        _FailedQRBody(),
       ],
     ));
   }
 }
 
-class _FailedPaymentBackground extends StatelessWidget {
-  const _FailedPaymentBackground();
+class _FailedQRBackground extends StatelessWidget {
+  const _FailedQRBackground();
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,8 @@ class _FailedPaymentBackground extends StatelessWidget {
   }
 }
 
-class _FailedPaymentBody extends StatelessWidget {
-  const _FailedPaymentBody();
+class _FailedQRBody extends StatelessWidget {
+  const _FailedQRBody();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class _FailedPaymentBody extends StatelessWidget {
             height: 10,
           ),
           const Text(
-            'Error registrar el pago',
+            'El boleto no es válido',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 28,
@@ -93,10 +93,10 @@ class _FailedPaymentBody extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          const Text('Puede contactar a soporte o',
+          const Text('Verifique si el boleto no se ha usado',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: Colors.white)),
-          const Text('reinténtalo de nuevo más tarde',
+          const Text('o reinténtalo de nuevo más tarde',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: Colors.white))
         ],

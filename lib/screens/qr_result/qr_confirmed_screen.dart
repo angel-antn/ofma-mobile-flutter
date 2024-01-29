@@ -1,25 +1,30 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:ofma_app/models/use_ticket_response.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 
-class PaymentFailedScreen extends StatelessWidget {
-  const PaymentFailedScreen({super.key});
+class QRConfirmedScreen extends StatelessWidget {
+  const QRConfirmedScreen({super.key, required this.useTicketResponse});
+
+  final UseTicketResponse useTicketResponse;
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         body: Stack(
       children: [
-        _FailedPaymentBackground(),
-        _FailedPaymentBody(),
+        const _QrConfirmedBackground(),
+        _QRConfirmedBody(
+          useTicketResponse: useTicketResponse,
+        ),
       ],
     ));
   }
 }
 
-class _FailedPaymentBackground extends StatelessWidget {
-  const _FailedPaymentBackground();
+class _QrConfirmedBackground extends StatelessWidget {
+  const _QrConfirmedBackground();
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +32,17 @@ class _FailedPaymentBackground extends StatelessWidget {
       height: double.maxFinite,
       width: double.maxFinite,
       child: Image.asset(
-        'assets/backgrounds/failed_payment_background.webp',
+        'assets/backgrounds/confirmed_ticket_background.webp',
         fit: BoxFit.cover,
       ),
     );
   }
 }
 
-class _FailedPaymentBody extends StatelessWidget {
-  const _FailedPaymentBody();
+class _QRConfirmedBody extends StatelessWidget {
+  const _QRConfirmedBody({required this.useTicketResponse});
+
+  final UseTicketResponse useTicketResponse;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +61,7 @@ class _FailedPaymentBody extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               SpinKitDoubleBounce(
-                color: AppColors.red,
+                color: AppColors.purple,
                 size: 150,
               ),
               Container(
@@ -63,7 +70,7 @@ class _FailedPaymentBody extends StatelessWidget {
                 decoration: const BoxDecoration(
                     shape: BoxShape.circle, color: Colors.white12),
                 child: const Icon(
-                  FeatherIcons.xCircle,
+                  FeatherIcons.checkCircle,
                   color: Colors.white,
                   size: 70,
                 ),
@@ -74,7 +81,7 @@ class _FailedPaymentBody extends StatelessWidget {
             height: 10,
           ),
           const Text(
-            'Error registrar el pago',
+            '¡Boleto escaneado!',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 28,
@@ -86,17 +93,22 @@ class _FailedPaymentBody extends StatelessWidget {
             height: 20,
           ),
           const Text(
-            'Lamentamos mucho lo sucedido',
+            'El boleto escaneado es válido',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          const Text(
+            'para el concierto:',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18, color: Colors.white),
           ),
           const SizedBox(
             height: 10,
           ),
-          const Text('Puede contactar a soporte o',
+          const Text('Esperamos disfrute el concierto',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: Colors.white)),
-          const Text('reinténtalo de nuevo más tarde',
+          const Text('que hemos preparado para usted',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: Colors.white))
         ],

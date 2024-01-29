@@ -1,18 +1,14 @@
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ofma_app/components/buttons/primary_button.dart';
 import 'package:ofma_app/components/buttons/touchable_opacity.dart';
-import 'package:ofma_app/components/concertMuscianList/concert_musician_list.dart';
 import 'package:ofma_app/data/remote/ofma/concert_request.dart';
 import 'package:ofma_app/models/concert_response.dart';
-import 'package:ofma_app/models/payment_params.dart';
-import 'package:ofma_app/router/router_const.dart';
+import 'package:ofma_app/screens/concert/pages/concert_booking_page.dart';
+import 'package:ofma_app/screens/concert/pages/concert_details_page.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:ofma_app/utils/convert_to_12_hour_format.dart';
-import 'package:ofma_app/utils/not_less_than.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ConcertScreen extends StatefulWidget {
@@ -25,48 +21,55 @@ class ConcertScreen extends StatefulWidget {
 }
 
 class _ConcertScreenState extends State<ConcertScreen> {
-  late Future<Concert?> concerFutureRequest;
+  late ValueNotifier<Future<Concert?>> concertNotifier;
   @override
   void initState() {
     final concertRequest = ConcertRequest();
-    concerFutureRequest = concertRequest.getConcertById(widget.id);
+    concertNotifier = ValueNotifier<Future<Concert?>>(
+        concertRequest.getConcertById(widget.id));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     setConcert() {
-      setState(() {
-        final concertRequest = ConcertRequest();
-        concerFutureRequest = concertRequest.getConcertById(widget.id);
-      });
+      final concertRequest = ConcertRequest();
+      concertNotifier.value =
+          Future(() => concertRequest.getConcertById(widget.id));
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: FutureBuilder(
-        future: concerFutureRequest,
-        builder: (context, concertSnapshot) {
-          return _ConcertPage(
-            concert: concertSnapshot.data,
-            setConcert: setConcert,
-          );
-        },
-      ),
+      body: ValueListenableBuilder(
+          valueListenable: concertNotifier,
+          builder: (context, value, child) {
+            return FutureBuilder(
+              future: value,
+              builder: (context, concertSnapshot) {
+                return _ConcertPage(
+                    concert: concertSnapshot.data,
+                    setConcert: setConcert,
+                    connectionState: concertSnapshot.connectionState);
+              },
+            );
+          }),
     );
   }
 }
 
 class _ConcertPage extends StatelessWidget {
-  const _ConcertPage({this.concert, required this.setConcert});
+  const _ConcertPage(
+      {this.concert, required this.setConcert, required this.connectionState});
 
   final Concert? concert;
   final Function setConcert;
+  final ConnectionState connectionState;
 
   @override
   Widget build(BuildContext context) {
     return Skeletonizer(
-      enabled: concert == null,
+      ignoreContainers: true,
+      enabled: concert == null || connectionState != ConnectionState.done,
       child: SingleChildScrollView(
         child: Stack(
           children: [
@@ -138,327 +141,14 @@ class _ConcertBodyState extends State<_ConcertBody> {
           const SizedBox(
             height: 30,
           ),
-          if (currentIndex == 0) _ConcertDetails(concert: widget.concert),
+          if (currentIndex == 0) ConcertDetailsPage(concert: widget.concert),
           if (currentIndex == 1)
-            _ConcertBooking(
+            ConcertBookingPage(
               concert: widget.concert,
               setConcert: widget.setConcert,
             )
         ],
       ),
-    );
-  }
-}
-
-class _ConcertBooking extends StatefulWidget {
-  const _ConcertBooking({this.concert, required this.setConcert});
-
-  final Concert? concert;
-  final Function setConcert;
-
-  @override
-  State<_ConcertBooking> createState() => __ConcertBookingState();
-}
-
-class __ConcertBookingState extends State<_ConcertBooking> {
-  int qty = 1;
-  @override
-  Widget build(BuildContext context) {
-    qtyPlus() {
-      setState(() {
-        if (qty <
-            notLessThan(
-              lessThan: 0,
-              number: (widget.concert?.entriesQty ?? 0) -
-                  (widget.concert?.ticketSoldQty ?? 0),
-            )) {
-          qty++;
-        }
-      });
-    }
-
-    qtyMinus() {
-      setState(() {
-        if (qty > 1) {
-          qty--;
-        }
-      });
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            'Informacíon de boleto:',
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: const BorderRadius.all(Radius.circular(50)),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset(5, 5),
-                  blurRadius: 3,
-                )
-              ]),
-          child: Row(
-            children: [
-              const Expanded(
-                  child: Center(
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Icon(
-                    FeatherIcons.shoppingBag,
-                    size: 18,
-                    color: Colors.black54,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Precio del boleto',
-                  )
-                ]),
-              )),
-              Expanded(
-                  child: Center(
-                child: Text(
-                    '${(widget.concert?.pricePerEntry ?? '').toString()} USD'),
-              ))
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: SizedBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Cantidad:',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(5, 5),
-                              blurRadius: 3,
-                            )
-                          ]),
-                      child: Row(
-                        children: [
-                          TouchableOpacity(
-                            onTap: () => qtyMinus(),
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                  color: AppColors.secondaryColor,
-                                  shape: BoxShape.circle),
-                              child: const Icon(
-                                FeatherIcons.minus,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                              child: Center(
-                            child: Text(qty.toString()),
-                          )),
-                          TouchableOpacity(
-                            onTap: () => qtyPlus(),
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                  color: AppColors.secondaryColor,
-                                  shape: BoxShape.circle),
-                              child: const Icon(
-                                FeatherIcons.plus,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: SizedBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Total:',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(5, 5),
-                              blurRadius: 3,
-                            )
-                          ]),
-                      child: Text(
-                          '${((widget.concert?.pricePerEntry ?? 0) * qty).toString()} USD'),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        if (widget.concert?.isOpen == true &&
-            notLessThan(
-                    lessThan: 0,
-                    number: (widget.concert?.entriesQty ?? 0) -
-                        (widget.concert?.ticketSoldQty ?? 0)) !=
-                0)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(notLessThan(
-                            lessThan: 0,
-                            number: (widget.concert?.entriesQty ?? 0) -
-                                (widget.concert?.ticketSoldQty ?? 0)) !=
-                        1
-                    ? 'Quedan ${notLessThan(lessThan: 0, number: (widget.concert?.entriesQty ?? 0) - (widget.concert?.ticketSoldQty ?? 0))} boletos disponibles'
-                    : 'Queda 1 boleto disponible'),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              PrimaryButton(
-                width: double.infinity,
-                onTap: () => context
-                    .pushNamed(
-                  AppRouterConstants.paymentScreen,
-                  extra: PaymentParams(
-                      type: 'boleteria',
-                      amount: (widget.concert?.pricePerEntry ?? 0) * qty,
-                      concertId: widget.concert?.id ?? '',
-                      ticketQty: qty),
-                )
-                    .then(
-                  (_) {
-                    widget.setConcert();
-                  },
-                ),
-                text: 'Siguiente',
-              ),
-            ],
-          ),
-        if (widget.concert?.isOpen == false)
-          const Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text('La venta de boletos para este concierto'),
-                Text('se encuentra cerrada')
-              ],
-            ),
-          ),
-        if (widget.concert?.isOpen == true &&
-            notLessThan(
-                    lessThan: 0,
-                    number: (widget.concert?.entriesQty ?? 0) -
-                        (widget.concert?.ticketSoldQty ?? 0)) ==
-                0)
-          const Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text('Se han agotado los boletos disponibles'),
-                Text('para este concierto')
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _ConcertDetails extends StatelessWidget {
-  const _ConcertDetails({
-    this.concert,
-  });
-
-  final Concert? concert;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          concert?.name ?? 'Lorem ipsum',
-          style: const TextStyle(fontSize: 18),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          concert?.description ?? 'lorem ipsum sit amet dolore' * 40,
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        ConcertMusiciansList(musicians: concert?.concertMusician ?? [])
-      ],
     );
   }
 }
@@ -528,7 +218,7 @@ class _ConcertHeader extends StatelessWidget {
       children: [
         Image.network(
           (concert?.imageUrl ??
-                  'https://cdn.pixabay.com/photo/2016/11/19/09/57/violins-1838390_1280.jpg')
+                  'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
               .replaceAll(
             'localhost',
             (dotenv.env['LOCALHOST_ENVIRON'] ?? ''),
