@@ -202,7 +202,7 @@ class _HighlightedMusiciansListState extends State<_HighlightedMusiciansList> {
       builder: (context, musicianSnapshot) {
         if (musicianSnapshot.hasData) {
           List<Widget> musicians = [];
-          for (Content? musician in (musicianSnapshot.data?.result ?? [])) {
+          for (Musician? musician in (musicianSnapshot.data?.result ?? [])) {
             musicians.add(MusicianCard(
               musician: musician,
             ));

@@ -19,4 +19,19 @@ class MusicianRequest {
       return null;
     }
   }
+
+  Future<Musician?> getMusicianById({String? id}) async {
+    final url = Uri.http(_baseUrl, '$_path/$id');
+
+    final response = await http.get(url);
+
+    //TODO: for presentation only
+    await Future.delayed(Duration(milliseconds: 1000));
+
+    if (response.statusCode == 200) {
+      return Musician.fromJson(response.body);
+    } else {
+      return null;
+    }
+  }
 }

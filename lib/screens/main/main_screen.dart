@@ -1,5 +1,6 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ofma_app/screens/main/pages/account_page.dart';
 import 'package:ofma_app/screens/main/pages/home_page.dart';
 import 'package:ofma_app/screens/main/pages/musicians_page.dart';
@@ -20,47 +21,64 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() => _currentIndex = index);
-        },
-        children: const [
-          HomePage(),
-          MusicianPage(),
-          TicketPage(),
-          AccountPage(),
-        ],
-      ),
-      bottomNavigationBar: SalomonBottomBar(
-        currentIndex: _currentIndex,
-        onTap: (i) {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) {
+        if (_currentIndex != 0) {
+          setState(() {
+            _currentIndex = 0;
+          });
           _pageController.animateToPage(
-            i,
+            _currentIndex,
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
           );
-        },
-        items: [
-          SalomonBottomBarItem(
-              icon: const Icon(FeatherIcons.home),
-              title: const Text('Inicio'),
-              selectedColor: AppColors.secondaryColor),
-          SalomonBottomBarItem(
-              icon: const Icon(FeatherIcons.music),
-              title: const Text('Musícos'),
-              selectedColor: AppColors.secondaryColor),
-          SalomonBottomBarItem(
-              icon: const Icon(FeatherIcons.grid),
-              title: const Text('Boletos'),
-              selectedColor: AppColors.secondaryColor),
-          SalomonBottomBarItem(
-              icon: const Icon(FeatherIcons.user),
-              title: const Text('Cuenta'),
-              selectedColor: AppColors.secondaryColor),
-        ],
+        } else {
+          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+        }
+      },
+      child: Scaffold(
+        body: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() => _currentIndex = index);
+          },
+          children: const [
+            HomePage(),
+            MusicianPage(),
+            TicketPage(),
+            AccountPage(),
+          ],
+        ),
+        bottomNavigationBar: SalomonBottomBar(
+          currentIndex: _currentIndex,
+          onTap: (i) {
+            _pageController.animateToPage(
+              i,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+          },
+          items: [
+            SalomonBottomBarItem(
+                icon: const Icon(FeatherIcons.home),
+                title: const Text('Inicio'),
+                selectedColor: AppColors.secondaryColor),
+            SalomonBottomBarItem(
+                icon: const Icon(FeatherIcons.music),
+                title: const Text('Musícos'),
+                selectedColor: AppColors.secondaryColor),
+            SalomonBottomBarItem(
+                icon: const Icon(FeatherIcons.grid),
+                title: const Text('Boletos'),
+                selectedColor: AppColors.secondaryColor),
+            SalomonBottomBarItem(
+                icon: const Icon(FeatherIcons.user),
+                title: const Text('Cuenta'),
+                selectedColor: AppColors.secondaryColor),
+          ],
+        ),
       ),
     );
   }

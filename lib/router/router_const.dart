@@ -16,6 +16,8 @@ class AppRouterConstants {
   static const String qRConfirmedScreen = 'qRConfirmedScreen';
   static const String qRFailedScreen = 'qRFailedScreen';
   static const String qRLoadingScreen = 'qRLoadingScreen';
+  static const String musicianScreen = 'musicianScreen';
+  static const String videoPlayerScreen = 'videoPlayerScreen';
   static const String exclusiveContentDetailsScreen =
       'exclusiveContentDetailsScreen';
 }

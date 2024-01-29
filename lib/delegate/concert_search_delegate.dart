@@ -2,8 +2,10 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/loaders/circular_loader.dart';
 import 'package:ofma_app/data/remote/ofma/content_request.dart';
+import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/theme/app_colors.dart';
 import 'package:ofma_app/utils/to_title_case.dart';
 
@@ -76,6 +78,14 @@ class _SuggestionsTiles extends StatelessWidget {
                 return Column(
                   children: [
                     ListTile(
+                      onTap: () {
+                        context.pushNamed(
+                            AppRouterConstants.exclusiveContentDetailsScreen,
+                            pathParameters: {
+                              'id': snapshot.data?.result?[index].id ?? '',
+                              'type': 'concierto'
+                            });
+                      },
                       subtitle: const Row(
                         children: [
                           Icon(

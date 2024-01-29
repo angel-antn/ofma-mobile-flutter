@@ -20,6 +20,7 @@ import 'package:ofma_app/screens/loading_payment/loading_payment_screen.dart';
 //screens
 import 'package:ofma_app/screens/login/login_screen.dart';
 import 'package:ofma_app/screens/main/main_screen.dart';
+import 'package:ofma_app/screens/musician/musician_screen.dart';
 import 'package:ofma_app/screens/orders/orders_screen.dart';
 import 'package:ofma_app/screens/payment/payment_screen.dart';
 import 'package:ofma_app/screens/payment_result/payment_confirmed_screen.dart';
@@ -33,6 +34,7 @@ import 'package:ofma_app/screens/recover_password/recover_password_screen.dart';
 import 'package:ofma_app/screens/register/register_screen.dart';
 import 'package:ofma_app/data/local/preferences.dart';
 import 'package:ofma_app/screens/suscription/suscription_screen.dart';
+import 'package:ofma_app/screens/video_player/video_player_creen.dart';
 
 class AppRouter {
   static final AppRouter _singleton = AppRouter._internal();
@@ -199,13 +201,34 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/conctent/:type/:id',
+        path: '/content/:type/:id',
         name: AppRouterConstants.exclusiveContentDetailsScreen,
         pageBuilder: (context, state) {
           return CustomFadeTransition(
               child: ExclusiveContentDetailsScreen(
             id: state.pathParameters['id']!,
             type: state.pathParameters['type']!,
+          ));
+        },
+      ),
+      GoRoute(
+        path: '/musician/:id',
+        name: AppRouterConstants.musicianScreen,
+        pageBuilder: (context, state) {
+          return CustomFadeTransition(
+              child: MusicianScreen(
+            id: state.pathParameters['id']!,
+          ));
+        },
+      ),
+      GoRoute(
+        path: '/video-player',
+        name: AppRouterConstants.videoPlayerScreen,
+        pageBuilder: (context, state) {
+          final url = state.extra as String;
+          return CustomFadeTransition(
+              child: VideoPlayerScreen(
+            url: url,
           ));
         },
       ),

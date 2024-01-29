@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class MusicianResponse {
   int? totalCount;
-  List<Content>? result;
+  List<Musician>? result;
 
   MusicianResponse({
     this.totalCount,
@@ -19,8 +19,8 @@ class MusicianResponse {
         totalCount: json["totalCount"],
         result: json["result"] == null
             ? []
-            : List<Content>.from(
-                json["result"]!.map((x) => Content.fromMap(x))),
+            : List<Musician>.from(
+                json["result"]!.map((x) => Musician.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -31,7 +31,7 @@ class MusicianResponse {
       };
 }
 
-class Content {
+class Musician {
   String? id;
   String? name;
   String? lastname;
@@ -43,8 +43,10 @@ class Content {
   String? gender;
   String? fullname;
   String? imageUrl;
+  String? concertCount;
+  String? exclusiveContentCount;
 
-  Content({
+  Musician({
     this.id,
     this.name,
     this.lastname,
@@ -56,13 +58,15 @@ class Content {
     this.gender,
     this.fullname,
     this.imageUrl,
+    this.concertCount,
+    this.exclusiveContentCount,
   });
 
-  factory Content.fromJson(String str) => Content.fromMap(json.decode(str));
+  factory Musician.fromJson(String str) => Musician.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Content.fromMap(Map<String, dynamic> json) => Content(
+  factory Musician.fromMap(Map<String, dynamic> json) => Musician(
         id: json["id"],
         name: json["name"],
         lastname: json["lastname"],
@@ -78,6 +82,8 @@ class Content {
         gender: json["gender"],
         fullname: json["fullname"],
         imageUrl: json["imageUrl"],
+        concertCount: json["concertCount"],
+        exclusiveContentCount: json["exclusiveContentCount"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -94,5 +100,7 @@ class Content {
         "gender": gender,
         "fullname": fullname,
         "imageUrl": imageUrl,
+        "concertCount": concertCount,
+        "exclusiveContentCount": exclusiveContentCount,
       };
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/buttons/secondary_button.dart';
 import 'package:ofma_app/components/content_musician_list/content_musician_list.dart';
 import 'package:ofma_app/data/remote/ofma/content_request.dart';
 import 'package:ofma_app/models/content_response.dart';
+import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/utils/to_title_case.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -31,6 +34,10 @@ class _ExclusiveContentDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -38,11 +45,12 @@ class _ExclusiveContentDetailsScreenState
       ),
       body: FutureBuilder(
         future: contentFutureRequest,
-        builder: (BuildContext context, AsyncSnapshot<Content?> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<Content?> contentSnapshot) {
           return _ExclusiveContentPage(
             type: widget.type,
-            exclusiveContent: snapshot.data,
-            connectionState: snapshot.connectionState,
+            exclusiveContent: contentSnapshot.data,
+            connectionState: contentSnapshot.connectionState,
           );
         },
       ),
@@ -121,7 +129,17 @@ class _ExclusiveContentBody extends StatelessWidget {
               height: 15,
             ),
             SecondaryButton(
-                width: double.infinity, onTap: () {}, text: 'Ver video'),
+                width: double.infinity,
+                onTap: () {
+                  context.pushNamed(
+                    AppRouterConstants.videoPlayerScreen,
+                    extra: (exclusiveContent?.videoUrl ?? '').replaceAll(
+                      'localhost',
+                      (dotenv.env['LOCALHOST_ENVIRON'] ?? ''),
+                    ),
+                  );
+                },
+                text: 'Ver video'),
             const SizedBox(
               height: 15,
             ),
