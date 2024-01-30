@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ofma_app/components/buttons/touchable_opacity.dart';
-import 'package:ofma_app/models/concert_response.dart';
 import 'package:ofma_app/models/content_response.dart';
 import 'package:ofma_app/router/router_const.dart';
 import 'package:ofma_app/utils/to_title_case.dart';
