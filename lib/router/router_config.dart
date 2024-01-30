@@ -256,6 +256,13 @@ class AppRouter {
         return '/login';
       }
 
+      final user = Preferences.user;
+
+      if ((user?.isPremium == null || user?.isPremium == false) &&
+          state.fullPath == '/video-player') {
+        return '/suscription';
+      }
+
       // Si ninguna de las condiciones anteriores se cumple, no redirige.
       return null;
     },
