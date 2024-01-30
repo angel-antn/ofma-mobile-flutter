@@ -1,6 +1,7 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ofma_app/components/loaders/circular_loader.dart';
+import 'package:ofma_app/utils/get_video_duration.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/services.dart';
 
@@ -126,6 +127,18 @@ class _VideoPlayerWidgetState extends State<_VideoPlayerWidget> {
                 const SizedBox(
                   width: 10,
                 ),
+                ValueListenableBuilder(
+                  valueListenable: widget.videoPlayerController,
+                  builder: (context, value, child) {
+                    return Text(
+                      getVideoDuration(value.position),
+                      style: const TextStyle(color: Colors.white),
+                    );
+                  },
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
                 Expanded(
                   child: VideoProgressIndicator(
                     widget.videoPlayerController,
@@ -133,7 +146,17 @@ class _VideoPlayerWidgetState extends State<_VideoPlayerWidget> {
                     colors:
                         const VideoProgressColors(playedColor: Colors.white),
                   ),
-                )
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  getVideoDuration(widget.videoPlayerController.value.duration),
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
               ],
             ),
           ),
