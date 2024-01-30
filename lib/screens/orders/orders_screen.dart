@@ -224,7 +224,7 @@ class _OrderItem extends StatelessWidget {
             icon: FeatherIcons.list,
             text: 'N° de orden:',
           ),
-          Text(order?.id ?? ''),
+          SelectableText(order?.id ?? ''),
           const SizedBox(
             height: 20,
           ),
