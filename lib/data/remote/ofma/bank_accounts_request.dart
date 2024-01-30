@@ -7,7 +7,7 @@ class BankAccountRequest {
   final String _path = '/api/bank-account';
 
   Future<BankAccountResponse?> getBankAccounts() async {
-    final url = Uri.http(_baseUrl, _path);
+    final url = Uri.http(_baseUrl, _path, {'all': 'false'});
 
     final response = await http.get(url);
 
