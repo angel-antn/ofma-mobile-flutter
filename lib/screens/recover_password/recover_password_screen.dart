@@ -245,7 +245,7 @@ class _RecoverFormPageOneState extends State<_RecoverFormPageOne> {
     if (checkEmail(value: value)) {
       return null;
     }
-    return 'correo electronico no valido';
+    return 'correo electrónico no válido';
   }
 
   validatePassword(String value) {
@@ -277,7 +277,7 @@ class _RecoverFormPageOneState extends State<_RecoverFormPageOne> {
             child: Center(
               child: Column(
                 children: [
-                  const LoginTitle(text: '¿Olvido su contraseña?'),
+                  const LoginTitle(text: '¿Olvidó su contraseña?'),
                   const SizedBox(height: 15),
                   const Text(
                     'No te preocupes, a todos nos ha pasado',
@@ -286,7 +286,7 @@ class _RecoverFormPageOneState extends State<_RecoverFormPageOne> {
                   const SizedBox(height: 25),
                   LoginTextFormField(
                     icon: CommunityMaterialIcons.at,
-                    hintText: 'Correo electronico',
+                    hintText: 'Correo electrónico',
                     onChanged: (value) =>
                         widget.recoverPasswordFormProvider.email = value,
                     validator: (value) => validateEmail(value),
@@ -451,7 +451,7 @@ class _RecoverFormPageTwoState extends State<_RecoverFormPageTwo> {
                 child: pinCodeTextField,
               ),
               const Text(
-                'La clave de 6 digitos enviada a su correo electrónico es de un solo uso. Ingrese la clave para establecer su nueva constraseña',
+                'La clave de 6 dígitos enviada a su correo electrónico es de un solo uso. Ingrese la clave para establecer su nueva constraseña',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -496,7 +496,7 @@ class _RecoverFormPageThree extends StatelessWidget {
                     height: 30,
                   ),
                   const Text(
-                    '¡Su clave ha sido actualizado con exito!',
+                    '¡Su clave ha sido actualizada con éxito!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.white,
@@ -511,7 +511,7 @@ class _RecoverFormPageThree extends StatelessWidget {
                     height: 30,
                   ),
                   const Text(
-                    'Podra iniciar sesión con su nueva contraseña a partir de ahora',
+                    'Podrá iniciar sesión con su nueva contraseña a partir de ahora',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,

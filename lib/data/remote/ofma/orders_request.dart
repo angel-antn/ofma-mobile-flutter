@@ -49,7 +49,10 @@ class OrderRequest {
     }
 
     final body = {
-      'amount': paymentParams.amount.toString(),
+      'amount': (exchangeRateId != null
+              ? paymentParams.amount
+              : paymentParams.amount * 1.03)
+          .toStringAsFixed(2),
       'type': paymentParams.type,
       'paidAt': '${paidAt.year}-${paidAt.month}-${paidAt.day}',
       'status': status,

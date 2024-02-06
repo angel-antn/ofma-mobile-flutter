@@ -187,6 +187,8 @@ class _OrderItem extends StatelessWidget {
         return AppColors.red;
       case 'pendiente':
         return AppColors.yellow;
+      case 'reembolsado':
+        return AppColors.lightBlue;
       default:
         return Colors.black26;
     }
@@ -194,7 +196,7 @@ class _OrderItem extends StatelessWidget {
 
   String getPaymentMethod(Order? order) {
     if (order?.mobilePayBankAccount != null) {
-      return 'Págo movil';
+      return 'Pago móvil';
     } else if (order?.transferBankAccount != null) {
       return 'Transferencia';
     } else if (order?.zelleBankAccount != null) {
@@ -230,7 +232,7 @@ class _OrderItem extends StatelessWidget {
           ),
           const _OrderItemField(
             icon: FeatherIcons.archive,
-            text: 'Metodo de págo:',
+            text: 'Método de pago:',
           ),
           Text(getPaymentMethod(order)),
           const SizedBox(
@@ -287,6 +289,14 @@ class _OrderItemTitle extends StatelessWidget {
     }
   }
 
+  getCorrectName(String text) {
+    return text == 'boleteria'
+        ? 'Boletería'
+        : text == 'suscripcion'
+            ? 'Suscripción'
+            : text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -298,7 +308,7 @@ class _OrderItemTitle extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(2)),
               border: Border.all(color: getTypeColor(order?.type ?? ''))),
           child: Text(
-            toTitleCase(order?.type ?? ''),
+            toTitleCase(getCorrectName(order?.type ?? '')),
             style: TextStyle(color: getTypeColor(order?.type ?? '')),
           ),
         ),

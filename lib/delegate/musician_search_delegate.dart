@@ -159,7 +159,7 @@ class _SuggestionImage extends StatelessWidget {
           height: 10,
         ),
         const Text(
-          '¿Interesado en saber más de nuestros musicos?',
+          '¿Interesado en saber más de nuestros músicos?',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18,

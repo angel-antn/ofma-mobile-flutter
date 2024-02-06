@@ -150,7 +150,7 @@ class _RegisterFormState extends State<_RegisterForm> {
       if (checkEmail(value: value)) {
         return null;
       }
-      return 'correo electronico no valido';
+      return 'correo electrónico no valido';
     }
 
     validatePassword(String value) {
@@ -233,7 +233,7 @@ class _RegisterFormState extends State<_RegisterForm> {
           const SizedBox(height: 20),
           LoginTextFormField(
             icon: CommunityMaterialIcons.at,
-            hintText: 'Correo electronico',
+            hintText: 'Correo electrónico',
             onChanged: (value) => registerFormProvider.email = value,
             validator: (value) => validateEmail(value),
           ),

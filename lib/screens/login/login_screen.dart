@@ -93,7 +93,7 @@ class _LoginFormState extends State<_LoginForm> {
       if (checkEmail(value: value)) {
         return null;
       }
-      return 'correo electronico no valido';
+      return 'correo electrónico no valido';
     }
 
     validatePassword(String value) {
@@ -145,7 +145,7 @@ class _LoginFormState extends State<_LoginForm> {
           const SizedBox(height: 30),
           LoginTextFormField(
             icon: CommunityMaterialIcons.at,
-            hintText: 'Correo electronico',
+            hintText: 'Correo electrónico',
             onChanged: (value) => loginFormProvider.email = value,
             validator: (value) => validateEmail(value),
           ),

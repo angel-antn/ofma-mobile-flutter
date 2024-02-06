@@ -38,7 +38,7 @@ class MusicianPage extends StatelessWidget {
               height: 30,
             ),
             const Text(
-              'Conoce a los musicos que te deleitan',
+              'Conoce a los músicos que te deleitan',
               style: TextStyle(fontSize: 18),
             ),
             const Text(

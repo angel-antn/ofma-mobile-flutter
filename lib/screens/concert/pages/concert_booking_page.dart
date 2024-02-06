@@ -50,7 +50,7 @@ class __ConcertBookingPageState extends State<ConcertBookingPage> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'Informacíon de boleto:',
+            'Información de boleto:',
           ),
         ),
         const SizedBox(

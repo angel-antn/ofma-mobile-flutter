@@ -49,7 +49,7 @@ class StripeForm extends StatelessWidget {
           paymentParams: paymentParams,
           width: double.infinity,
           text: 'Siguiente',
-          amount: paymentParams.amount,
+          amount: paymentParams.amount * 1.03,
         )
       ],
     );

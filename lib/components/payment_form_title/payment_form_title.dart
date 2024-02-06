@@ -16,6 +16,10 @@ class PaymentFormTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double finalAmount = (amount * (exchangeRate?.rate ?? 1));
+    if (exchangeRate == null) {
+      finalAmount *= 1.03;
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -24,16 +28,35 @@ class PaymentFormTitle extends StatelessWidget {
           title,
           style: const TextStyle(fontSize: 18),
         ),
-        Container(
-          decoration: BoxDecoration(
-              color: AppColors.secondaryColor,
-              borderRadius: const BorderRadius.all(Radius.circular(5))),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
-          child: Text(
-            '${(amount * (exchangeRate?.rate ?? 1)).toStringAsFixed(2)} ${exchangeRate == null ? 'USD' : 'VES'}',
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.w500),
-          ),
+        Row(
+          children: [
+            if (exchangeRate == null)
+              Container(
+                decoration: const BoxDecoration(
+                    color: Colors.black38,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+                child: const Text(
+                  'IGTF',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+              ),
+            const SizedBox(
+              width: 10,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: AppColors.secondaryColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+              child: Text(
+                '${finalAmount.toStringAsFixed(2)} ${exchangeRate == null ? 'USD' : 'VES'}',
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ],
         )
       ],
     );

@@ -74,7 +74,7 @@ class _ConfirmedPaymentBody extends StatelessWidget {
             height: 10,
           ),
           const Text(
-            '¡Pago registrado con exito!',
+            '¡Pago registrado con éxito!',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 28,
@@ -96,7 +96,7 @@ class _ConfirmedPaymentBody extends StatelessWidget {
           const Text('Puede revisar el estatus de su orden',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: Colors.white)),
-          const Text('en la seccion de ver órdenes',
+          const Text('en la sección de ver órdenes',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: Colors.white))
         ],

@@ -174,7 +174,7 @@ class _MobilePayDetails extends StatelessWidget {
         DetailTile(
           body: bankAccount?.accountHolderPhone ?? '',
           icon: CommunityMaterialIcons.phone_classic,
-          title: 'Telefono',
+          title: 'Teléfono',
         ),
       ]),
     );
